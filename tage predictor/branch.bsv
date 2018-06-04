@@ -56,7 +56,7 @@ interface Ifc_branch;
 	//returns the prediction result
 	method Bit#(23) mn_get;
 	//to train the predictor
-	method Action ma_train(Gv_pc pc,Bit#(1) prediction,Gv_bank_num bank_no,Bool truth,Gv_counter counter,Bit#(5) bank_bits,Gv_tag tag,Gv_counter bimodal);
+	method Action ma_train(Gv_pc pc,Bool truth,Bit#(1) prediction,Gv_counter counter,Gv_tag tag,Bit#(5) bank_bits,Gv_bank_num bank_no,Gv_counter bimodal);
 endinterface
 
 //module
@@ -214,7 +214,7 @@ module mkbranch(Ifc_branch);
 
 	//gets training data into predictor and does the training; also updates the csrs
 
-	method Action ma_train(Gv_pc pc,Bit#(1) prediction,Gv_bank_num bank_num,Bool truth,Gv_counter counter,Bit#(5) bank_bits,Gv_tag tag,Gv_counter bimodal);
+	method Action ma_train(Gv_pc pc,Bool truth,Bit#(1) prediction,Gv_counter counter,Gv_tag tag,Bit#(5) bank_bits,Gv_bank_num bank_num,Gv_counter bimodal);
 		Gv_bimodal_addr lv_bimodal_addr=pc[11:0];
 		Gv_global_addr lv_bank1_addr=fn_hash_indx(pc[19:0],rg_global_history[9:0]);
 		Gv_global_addr lv_bank2_addr=fn_hash_indx(pc[19:0],rg_bank2_csr_indx);
