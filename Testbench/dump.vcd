@@ -1,0 +1,1010 @@
+$date
+	Tue Jun  5 10:53:13 2018
+$end
+$version
+	Bluespec VCD dumper 2.1
+$end
+$timescale
+	1 us
+$end
+$scope module main $end
+$scope module top $end
+$var reg 1 ! CLK $end
+$var reg 1 ! CLK $end
+$var reg 1 " CAN_FIRE_RL_rl_count $end
+$var reg 1 # CAN_FIRE_RL_rl_display $end
+$var reg 1 $ CAN_FIRE_RL_rl_end $end
+$var reg 1 % CAN_FIRE_RL_rl_input $end
+$var reg 1 & CAN_FIRE_RL_rl_output $end
+$var reg 1 ' CAN_FIRE_RL_rl_train $end
+$var reg 1 ( RST_N $end
+$var reg 1 ) WILL_FIRE_RL_rl_count $end
+$var reg 1 * WILL_FIRE_RL_rl_display $end
+$var reg 1 + WILL_FIRE_RL_rl_end $end
+$var reg 1 , WILL_FIRE_RL_rl_input $end
+$var reg 1 - WILL_FIRE_RL_rl_output $end
+$var reg 1 . WILL_FIRE_RL_rl_train $end
+$var reg 1 / prediction__h381 $end
+$var reg 23 0 test_predict_wget____d16 $end
+$var reg 32 1 v__h762 $end
+$var reg 64 2 x__h740 $end
+$var reg 4 3 x__h807 $end
+$var reg 4 7 lv_count $end
+$var reg 64 8 test_pc $end
+$var reg 23 9 test_predict $end
+$scope module branch $end
+$var reg 1 ! CLK $end
+$var reg 1 : CAN_FIRE_RL_rl_predict $end
+$var reg 1 ; CAN_FIRE_RL_rl_read_bram $end
+$var reg 1 < CAN_FIRE_ma_put $end
+$var reg 1 = CAN_FIRE_ma_train $end
+$var reg 1 > CAN_FIRE_mn_get $end
+$var reg 1 ? RST_N $end
+$var reg 1 @ WILL_FIRE_RL_rl_predict $end
+$var reg 1 A WILL_FIRE_RL_rl_read_bram $end
+$var reg 1 B WILL_FIRE_ma_put $end
+$var reg 1 C WILL_FIRE_ma_train $end
+$var reg 10 D csr__h5439 $end
+$var reg 8 E rg_bank1_csr_p__h13483 $end
+$var reg 7 F rg_bank1_csr_s__h13383 $end
+$var reg 10 G rg_bank2_csr_indx__h12736 $end
+$var reg 8 H rg_bank2_csr_p__h13603 $end
+$var reg 7 I rg_bank2_csr_s__h13530 $end
+$var reg 10 J rg_bank3_csr_indx__h12812 $end
+$var reg 8 K rg_bank3_csr_p__h13751 $end
+$var reg 7 L rg_bank3_csr_s__h13651 $end
+$var reg 10 M rg_bank4_csr_indx__h12888 $end
+$var reg 8 N rg_bank4_csr_p__h13899 $end
+$var reg 7 O rg_bank4_csr_s__h13799 $end
+$var reg 80 P rg_global_history_7_BITS_78_TO_0_14_CONCAT_IF__ETC___d117 $end
+$var reg 79 Q rg_global_history_BITS_78_TO_0___h3916 $end
+$var reg 80 R rg_global_history__h13826 $end
+$var reg 8 S y__h10017 $end
+$var reg 8 T y__h10237 $end
+$var reg 8 U y__h10393 $end
+$var reg 8 V y__h10722 $end
+$var reg 1 W EN_ma_put $end
+$var reg 1 X EN_ma_train $end
+$var reg 1 Y RDY_ma_put $end
+$var reg 1 Z RDY_ma_train $end
+$var reg 1 [ RDY_mn_get $end
+$var reg 64 \ ma_put_pc $end
+$var reg 5 ] ma_train_bank_bits $end
+$var reg 3 ^ ma_train_bank_no $end
+$var reg 3 _ ma_train_bimodal $end
+$var reg 3 ` ma_train_counter $end
+$var reg 64 a ma_train_pc $end
+$var reg 1 b ma_train_prediction $end
+$var reg 8 c ma_train_tag $end
+$var reg 1 d ma_train_truth $end
+$var reg 23 e mn_get $end
+$scope module bram_bank1 $end
+$var reg 1 ! CLKA $end
+$var reg 1 "% ENA $end
+$var reg 1 "& WEA $end
+$var reg 10 "' ADDRA $end
+$var reg 12 "( DIA $end
+$var reg 12 ") DOA $end
+$var reg 1 ! CLKB $end
+$var reg 1 "* ENB $end
+$var reg 1 "+ WEB $end
+$var reg 10 ", ADDRB $end
+$var reg 12 "- DIB $end
+$var reg 12 ". DOB $end
+$upscope $end
+$scope module bram_bank2 $end
+$var reg 1 ! CLKA $end
+$var reg 1 "/ ENA $end
+$var reg 1 "0 WEA $end
+$var reg 10 "1 ADDRA $end
+$var reg 12 "2 DIA $end
+$var reg 12 "3 DOA $end
+$var reg 1 ! CLKB $end
+$var reg 1 "4 ENB $end
+$var reg 1 "5 WEB $end
+$var reg 10 "6 ADDRB $end
+$var reg 12 "7 DIB $end
+$var reg 12 "8 DOB $end
+$upscope $end
+$scope module bram_bank3 $end
+$var reg 1 ! CLKA $end
+$var reg 1 "9 ENA $end
+$var reg 1 ": WEA $end
+$var reg 10 "; ADDRA $end
+$var reg 12 "< DIA $end
+$var reg 12 "= DOA $end
+$var reg 1 ! CLKB $end
+$var reg 1 "> ENB $end
+$var reg 1 "? WEB $end
+$var reg 10 "@ ADDRB $end
+$var reg 12 "A DIB $end
+$var reg 12 "B DOB $end
+$upscope $end
+$scope module bram_bank4 $end
+$var reg 1 ! CLKA $end
+$var reg 1 "C ENA $end
+$var reg 1 "D WEA $end
+$var reg 10 "E ADDRA $end
+$var reg 12 "F DIA $end
+$var reg 12 "G DOA $end
+$var reg 1 ! CLKB $end
+$var reg 1 "H ENB $end
+$var reg 1 "I WEB $end
+$var reg 10 "J ADDRB $end
+$var reg 12 "K DIB $end
+$var reg 12 "L DOB $end
+$upscope $end
+$scope module bram_bimodal $end
+$var reg 1 ! CLKA $end
+$var reg 1 "M ENA $end
+$var reg 1 "N WEA $end
+$var reg 12 "O ADDRA $end
+$var reg 4 "P DIA $end
+$var reg 4 "Q DOA $end
+$var reg 1 ! CLKB $end
+$var reg 1 "R ENB $end
+$var reg 1 "S WEB $end
+$var reg 12 "T ADDRB $end
+$var reg 4 "U DIB $end
+$var reg 4 "V DOB $end
+$upscope $end
+$var reg 8 "W rg_bank1_csr_p $end
+$var reg 7 "X rg_bank1_csr_s $end
+$var reg 10 "Y rg_bank2_csr_indx $end
+$var reg 8 "Z rg_bank2_csr_p $end
+$var reg 7 "[ rg_bank2_csr_s $end
+$var reg 10 "\ rg_bank3_csr_indx $end
+$var reg 8 "] rg_bank3_csr_p $end
+$var reg 7 "^ rg_bank3_csr_s $end
+$var reg 10 "_ rg_bank4_csr_indx $end
+$var reg 8 "` rg_bank4_csr_p $end
+$var reg 7 "a rg_bank4_csr_s $end
+$var reg 80 "b rg_global_history $end
+$var reg 64 "c rg_pc_copy $end
+$var reg 12 "d wr_bank1_out $end
+$var reg 12 "e wr_bank2_out $end
+$var reg 12 "f wr_bank3_out $end
+$var reg 12 "g wr_bank4_out $end
+$var reg 5 "h wr_bank_bits $end
+$var reg 3 "i wr_bank_num $end
+$var reg 3 "j wr_bimodal_counter $end
+$var reg 4 "k wr_bimodal_out $end
+$var reg 3 "l wr_counter $end
+$var reg 1 "m wr_prediction $end
+$var reg 8 "n wr_tag $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+1!
+1"
+1#
+0$
+1%
+1&
+1'
+0(
+1)
+1*
+0+
+1,
+1-
+1.
+1/
+b11010101010100000000101 0
+b10101010101010101010101010101010 1
+b1010101010101010101010101010101010101010101010101010101010101010 2
+b1010 3
+b0 7
+b0 8
+b11010101010100000000101 9
+1:
+1;
+1<
+1=
+1>
+0?
+1@
+1A
+1B
+1C
+b1010101010 D
+b10101010 E
+b101010 F
+b1010101010 G
+b10101010 H
+b101010 I
+b1010101010 J
+b10101010 K
+b101010 L
+b1010101010 M
+b10101010 N
+b101010 O
+b1010101010101010101010101010101010101010101010101010101010101010101010101010101 P
+b101010101010101010101010101010101010101010101010101010101010101010101010101010 Q
+b10101010101010101010101010101010101010101010101010101010101010101010101010101010 R
+b1010100 S
+b1010100 T
+b1010100 U
+b1010100 V
+1W
+1X
+1Y
+1Z
+1[
+b1010101010101010101010101010101010101010101010101010101010101010 \
+b0 ]
+b0 ^
+b101 _
+b101 `
+b1010101010101010101010101010101010101010101010101010101010101001 a
+1b
+b1010101 c
+1d
+b11010101010100000000101 e
+1"%
+0"&
+b1010101010 "'
+b101010101010 "(
+b101010101010 ")
+0"*
+0"+
+b0 ",
+b101010101010 "-
+b101010101010 ".
+1"/
+0"0
+b1010101010 "1
+b101010101010 "2
+b101010101010 "3
+0"4
+0"5
+b0 "6
+b101010101010 "7
+b101010101010 "8
+1"9
+0":
+b1010101010 ";
+b101010101010 "<
+b101010101010 "=
+0">
+0"?
+b0 "@
+b101010101010 "A
+b101010101010 "B
+1"C
+0"D
+b1010101010 "E
+b101010101010 "F
+b101010101010 "G
+0"H
+0"I
+b0 "J
+b101010101010 "K
+b101010101010 "L
+1"M
+0"N
+b101010101010 "O
+b1010 "P
+b1010 "Q
+1"R
+1"S
+b101010101001 "T
+b1100 "U
+b1100 "V
+b0 "W
+b0 "X
+b0 "Y
+b0 "Z
+b0 "[
+b0 "\
+b0 "]
+b0 "^
+b0 "_
+b0 "`
+b0 "a
+b0 "b
+b0 "c
+b101010101010 "d
+b101010101010 "e
+b101010101010 "f
+b101010101010 "g
+b0 "h
+b0 "i
+b101 "j
+b1010 "k
+b101 "l
+1"m
+b1010101 "n
+0#
+0&
+0'
+0*
+0-
+0.
+b0 2
+b0 3
+bx 9
+0C
+b0 D
+b0 E
+b0 F
+b0 G
+b0 H
+b0 I
+b0 J
+b0 K
+b0 L
+b0 M
+b0 N
+b0 O
+b0 R
+b0 S
+b0 T
+b0 U
+b0 V
+0X
+b0 \
+b0 "'
+b0 "1
+b0 ";
+b0 "E
+b0 "O
+0"R
+0"S
+#5
+0!
+1(
+1?
+#10
+1#
+1&
+1'
+1*
+1-
+1.
+b11000000000000000010100 0
+b10100 1
+b1 2
+b1 3
+b11000000000000000010100 9
+1C
+b0 P
+b0 Q
+1X
+b1 \
+b10 ^
+b100 _
+b100 `
+b0 a
+b0 c
+0d
+b11000000000000000010100 e
+b1 "'
+b1 "1
+1"4
+1"5
+b11000000000 "7
+b1 ";
+1">
+1"?
+b100000000000 "A
+b1 "E
+1"H
+1"I
+b100000000000 "K
+b1 "O
+1"R
+1"S
+b0 "T
+b1000 "U
+b0 "d
+b100000000000 "e
+b10 "f
+b110 "g
+b10 "i
+b100 "j
+b1000 "k
+b100 "l
+b0 "n
+1!
+b1 7
+b1 8
+b0 ")
+b100000000000 "3
+b10 "=
+b110 "G
+b1000 "Q
+#15
+0!
+#20
+0/
+b100000010000 0
+b11110 1
+b10 2
+b10 3
+b100000010000 9
+b10 \
+b0 _
+b0 `
+b1 a
+0b
+b1 c
+1d
+b100000010000 e
+b10 "'
+b10 "1
+b1 "6
+b11 "7
+b10 ";
+0">
+0"?
+b10 "E
+0"H
+0"I
+b10 "O
+b1 "T
+b1 "U
+b10 "e
+b0 "f
+b101010101010 "g
+b0 "j
+b0 "k
+b0 "l
+0"m
+b1 "n
+1!
+b10 7
+b10 8
+b10 "3
+b11000000000 "8
+b0 "=
+b100000000000 "B
+b101010101010 "G
+b100000000000 "L
+b0 "Q
+b1000 "V
+b1 "c
+#25
+0!
+#30
+b0 0
+b101000 1
+b11 2
+b11 3
+b0 9
+b11 \
+b0 ^
+b10 a
+b0 c
+b0 e
+b11 "'
+b11 "1
+0"4
+0"5
+b11 ";
+b11 "E
+b11 "O
+0"R
+0"S
+b0 "e
+b101010101010 "f
+b0 "i
+b0 "n
+1!
+b11 7
+b11 8
+b0 "3
+b11 "8
+b101010101010 "=
+b1 "V
+b10 "c
+#35
+0!
+#40
+b110010 1
+b100 2
+b100 3
+b100 \
+b11 a
+b100 "'
+b100 "1
+b100 ";
+b100 "E
+b100 "O
+b101010101010 "e
+1!
+b100 7
+b100 8
+b101010101010 "3
+b11 "c
+#45
+0!
+#50
+b101010100000000000 0
+b111100 1
+b101 2
+b101 3
+b101010100000000000 9
+b101 \
+b100 a
+b1010101 c
+b101010100000000000 e
+b101 "'
+b101 "1
+b101 ";
+b101 "E
+b101 "O
+b101010101010 "d
+b1010101 "n
+1!
+b101 7
+b101 8
+b101010101010 ")
+b100 "c
+#55
+0!
+#60
+1/
+b11010101010100000000101 0
+b1000110 1
+b110 2
+b110 3
+b11010101010100000000101 9
+b1 P
+b110 \
+b101 _
+b101 `
+b101 a
+1b
+b11010101010100000000101 e
+b110 "'
+b110 "1
+b110 ";
+b110 "E
+b110 "O
+1"R
+1"S
+b101 "T
+b1100 "U
+b101 "j
+b1010 "k
+b101 "l
+1"m
+1!
+b110 7
+b110 8
+b1010 "Q
+b101 "c
+#65
+0!
+#70
+b1010000 1
+b111 2
+b111 3
+b1 D
+b1 E
+b1 F
+b1 G
+b1 H
+b1 I
+b1 J
+b1 K
+b1 L
+b1 M
+b1 N
+b1 O
+b11 P
+b1 Q
+b1 R
+b10 S
+b10 T
+b10 U
+b10 V
+b111 \
+b110 a
+b111 "O
+b110 "T
+1!
+b111 7
+b111 8
+b1100 "V
+b1 "W
+b1 "X
+b1 "Y
+b1 "Z
+b1 "[
+b1 "\
+b1 "]
+b1 "^
+b1 "_
+b1 "`
+b1 "a
+b1 "b
+b110 "c
+#75
+0!
+#80
+b1011010 1
+b1000 2
+b1000 3
+b11 D
+b11 E
+b11 F
+b11 G
+b11 H
+b11 I
+b11 J
+b11 K
+b11 L
+b11 M
+b11 N
+b11 O
+b111 P
+b11 Q
+b11 R
+b110 S
+b110 T
+b110 U
+b110 V
+b1000 \
+b111 a
+b1011 "'
+b1011 "1
+b1011 ";
+b1011 "E
+b1000 "O
+b111 "T
+1!
+b1000 7
+b1000 8
+b11 "W
+b11 "X
+b11 "Y
+b11 "Z
+b11 "[
+b11 "\
+b11 "]
+b11 "^
+b11 "_
+b11 "`
+b11 "a
+b11 "b
+b111 "c
+#85
+0!
+#90
+b1100100 1
+b1001 2
+b1001 3
+b111 D
+b111 E
+b111 F
+b111 G
+b111 H
+b111 I
+b111 J
+b111 K
+b111 L
+b111 M
+b111 N
+b111 O
+b1111 P
+b111 Q
+b111 R
+b1110 S
+b1110 T
+b1110 U
+b1110 V
+b1001 \
+b1000 a
+b1110 "'
+b1110 "1
+b1110 ";
+b1110 "E
+b1001 "O
+b1000 "T
+1!
+b1001 7
+b1001 8
+b111 "W
+b111 "X
+b111 "Y
+b111 "Z
+b111 "[
+b111 "\
+b111 "]
+b111 "^
+b111 "_
+b111 "`
+b111 "a
+b111 "b
+b1000 "c
+#95
+0!
+#100
+b1101110 1
+b1010 2
+b1010 3
+b1111 D
+b1111 E
+b11111 F
+b1111 G
+b1111 H
+b1111 I
+b1111 J
+b1111 K
+b1111 L
+b1111 M
+b1111 N
+b1111 O
+b11111 P
+b1111 Q
+b1111 R
+b111110 S
+b11110 T
+b11110 U
+b11110 V
+b1010 \
+b1001 a
+b101 "'
+b101 "1
+b101 ";
+b101 "E
+b1010 "O
+b1001 "T
+1!
+b1010 7
+b1010 8
+b1111 "W
+b11111 "X
+b1111 "Y
+b1111 "Z
+b1111 "[
+b1111 "\
+b1111 "]
+b1111 "^
+b1111 "_
+b1111 "`
+b1111 "a
+b1111 "b
+b1001 "c
+#105
+0!
+#110
+b1111000 1
+b1011 2
+b1011 3
+b11111 D
+b11111 E
+b111111 F
+b11111 G
+b11111 H
+b11111 I
+b11111 J
+b11111 K
+b11111 L
+b11111 M
+b11111 N
+b11111 O
+b111111 P
+b11111 Q
+b11111 R
+b1111110 S
+b111110 T
+b111110 U
+b111110 V
+b1011 \
+b1010 a
+b10100 "'
+b10100 "1
+b10100 ";
+b10100 "E
+b1011 "O
+b1010 "T
+1!
+b1011 7
+b1011 8
+b11111 "W
+b111111 "X
+b11111 "Y
+b11111 "Z
+b11111 "[
+b11111 "\
+b11111 "]
+b11111 "^
+b11111 "_
+b11111 "`
+b11111 "a
+b11111 "b
+b1010 "c
+#115
+0!
+#120
+b10000010 1
+b1100 2
+b1100 3
+b111111 D
+b111111 E
+b1111111 F
+b111111 G
+b111111 H
+b111111 I
+b111111 J
+b111111 K
+b111111 L
+b111111 M
+b111111 N
+b111111 O
+b1111111 P
+b111111 Q
+b111111 R
+b11111110 S
+b1111110 T
+b1111110 U
+b1111110 V
+b1100 \
+b1011 a
+b110011 "'
+b110011 "1
+b110011 ";
+b110011 "E
+b1100 "O
+b1011 "T
+1!
+b1100 7
+b1100 8
+b111111 "W
+b1111111 "X
+b111111 "Y
+b111111 "Z
+b111111 "[
+b111111 "\
+b111111 "]
+b111111 "^
+b111111 "_
+b111111 "`
+b111111 "a
+b111111 "b
+b1011 "c
+#125
+0!
+#130
+b10001100 1
+b1101 2
+b1101 3
+b1111111 D
+b1111111 E
+b1111111 G
+b1111111 H
+b1111111 I
+b1111111 J
+b1111111 K
+b1111111 L
+b1111111 M
+b1111111 N
+b1111111 O
+b11111111 P
+b1111111 Q
+b1111111 R
+b11111110 T
+b11111110 U
+b11111110 V
+b1101 \
+b1100 a
+b1110010 "'
+b1110010 "1
+b1110010 ";
+b1110010 "E
+b1101 "O
+b1100 "T
+1!
+b1101 7
+b1101 8
+b1111111 "W
+b1111111 "Y
+b1111111 "Z
+b1111111 "[
+b1111111 "\
+b1111111 "]
+b1111111 "^
+b1111111 "_
+b1111111 "`
+b1111111 "a
+b1111111 "b
+b1100 "c
+#135
+0!
+#140
+b10010110 1
+b1110 2
+b1110 3
+b11111111 D
+b11111111 E
+b11111111 G
+b11111111 H
+b1111110 I
+b11111111 J
+b11111111 K
+b11111111 M
+b11111111 N
+b111111111 P
+b11111111 Q
+b11111111 R
+b11111100 U
+b1110 \
+b1101 a
+b11110001 "'
+b11110001 "1
+b11110001 ";
+b11110001 "E
+b1110 "O
+b1101 "T
+1!
+b1110 7
+b1110 8
+b11111111 "W
+b11111111 "Y
+b11111111 "Z
+b1111110 "[
+b11111111 "\
+b11111111 "]
+b11111111 "_
+b11111111 "`
+b11111111 "b
+b1101 "c
+#145
+0!
+#150
+0"
+0#
+1$
+0%
+0&
+0'
+0)
+0*
+1+
+0,
+0-
+0.
+b1111 3
+bx 9
+0B
+0C
+b11111110 E
+b1111110 F
+b11111110 H
+b11111110 K
+b1111110 L
+b11111110 N
+b1111110 O
+b11111100 S
+b11111100 T
+b11111100 V
+0W
+0X
+0"%
+0"/
+0"9
+0"C
+0"M
+0"R
+0"S
+1!
+b1111 7
+b1111 8
+b11111110 "W
+b1111110 "X
+b111111111 "Y
+b11111110 "Z
+b111111111 "\
+b11111110 "]
+b1111110 "^
+b111111111 "_
+b11111110 "`
+b1111110 "a
+b111111111 "b
+b1110 "c
+#155
+0!
