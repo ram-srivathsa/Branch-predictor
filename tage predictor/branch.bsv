@@ -7,7 +7,7 @@ import BRAMCore :: *;
 `define DATA_SIZE_BIMODAL 4
 `define DATA_SIZE_GLOBAL 12
 `define TAG_SIZE 8
-`define HIST_SIZE 256 //no. of history bits
+`define HIST_SIZE 80 //no. of history bits
 `define PC_SIZE 64
 `define BANK_BITS 3
 `define WRITE True
@@ -33,16 +33,19 @@ typedef Bit#(TSub#(`TAG_SIZE,1)) Gv_secondary_csr;
 typedef Bit#(`BANK_BITS) Gv_bank_num;
 typedef Bit#(`COUNTER_SIZE) Gv_counter;
 
+
 //functions
 //compares tag with hash function output
 function Bool fn_compare(Gv_tag x,Gv_tag y);
 	return (x==y)?True:False;
 endfunction 
 
+
 //hash functions
 function Gv_global_addr fn_hash_indx(Bit#(20) pc,Bit#(10) csr);
 	return pc[9:0]^pc[19:10]^csr;
 endfunction
+
 
 function Gv_tag fn_hash_tag(Bit#(8) pc,Bit#(8) csr1,Bit#(7) csr2);
 	return pc^csr1^{csr2,1'b0};
@@ -58,6 +61,7 @@ interface Ifc_branch;
 	//to train the predictor
 	method Action ma_train(Gv_pc pc,Bool truth,Bit#(1) prediction,Gv_counter counter,Gv_tag tag,Bit#(5) bank_bits,Gv_bank_num bank_no,Gv_counter bimodal);
 endinterface
+
 
 //module
 (*synthesize*)
@@ -169,6 +173,7 @@ module mkbranch(Ifc_branch);
 		
 	endrule
 
+
 	//reads bram outputs onto the wires; separate rule used instead of putting it in ma_put to prevent scheduling issues if any
 	rule rl_read_bram;
 		wr_bimodal_out<= bram_bimodal.a.read();
@@ -177,6 +182,7 @@ module mkbranch(Ifc_branch);
 		wr_bank3_out<= bram_bank3.a.read();
 		wr_bank4_out<= bram_bank4.a.read();
 	endrule
+
 
 	//enters pc into module and issues read requests to the brams to perform prediction 
 	method Action ma_put(Gv_pc pc);
@@ -207,10 +213,12 @@ module mkbranch(Ifc_branch);
 		rg_pc_copy<= pc;
 
 	endmethod
+
 	
 	method Bit#(23) mn_get;
 		return {wr_prediction,wr_counter,wr_tag,wr_bank_bits,wr_bank_num,wr_bimodal_counter};
 	endmethod
+
 
 	//gets training data into predictor and does the training; also updates the csrs
 
@@ -247,14 +255,17 @@ module mkbranch(Ifc_branch);
 				rg_bank2_csr_indx <= (rg_bank2_csr_indx << 1) | {9'b0,(rg_global_history[19]^1^rg_bank2_csr_indx[9])}; 			//Calculating new values of cyclic
 			 	rg_bank3_csr_indx <= (rg_bank3_csr_indx << 1) | {9'b0,(rg_global_history[39]^1^rg_bank3_csr_indx[9])}; 			// shift registers
 			 	rg_bank4_csr_indx <= (rg_bank4_csr_indx << 1) | {9'b0,(rg_global_history[79]^1^rg_bank4_csr_indx[9])};
+
 			 	rg_bank1_csr_p <= {(rg_bank1_csr_p[7:6] << 1) | {1'b0,(rg_global_history[9]^rg_bank1_csr_p[5])}, (rg_bank1_csr_p[5:0] << 1) | {5'b0, 1^rg_bank1_csr_p[7]}};
 			 	rg_bank2_csr_p <= {(rg_bank2_csr_p[7:4] << 1 | zeroExtend(rg_global_history[19]^rg_bank2_csr_p[3])), rg_bank2_csr_p[3:0] << 1 | zeroExtend(1^rg_bank2_csr_p[7])};
 			 	rg_bank3_csr_p <= rg_bank3_csr_p << 1 | zeroExtend(rg_global_history[39]^1^rg_bank3_csr_p[7]);
 			 	rg_bank4_csr_p <= rg_bank4_csr_p << 1 | zeroExtend(rg_global_history[79]^1^rg_bank4_csr_p[7]);
+
 			 	rg_bank1_csr_s <= {(rg_bank1_csr_s[6:4] << 1 | zeroExtend(rg_global_history[9]^rg_bank1_csr_p[2])), rg_bank1_csr_p[3:0] << 1 | zeroExtend(1^rg_bank1_csr_p[7])};
 			 	rg_bank2_csr_s <= {(rg_bank2_csr_s[5]^(rg_global_history[19])), rg_bank2_csr_p[5:0] << 1 | zeroExtend(1^rg_bank2_csr_p[6])};
 			 	rg_bank3_csr_s <= {(rg_bank3_csr_s[6:5] << 1 | zeroExtend(rg_global_history[39]^rg_bank3_csr_p[4])), rg_bank3_csr_p[4:0] << 1 | zeroExtend(1^rg_bank3_csr_p[7])};
 			 	rg_bank4_csr_s <= {(rg_bank4_csr_s[6:3] << 1 | zeroExtend(rg_global_history[79]^rg_bank4_csr_p[2])), rg_bank4_csr_p[2:0] << 1 | zeroExtend(1^rg_bank4_csr_p[7])};
+
 				//perform bank updation
 				case(lv_bank_num)
 				0:
@@ -262,6 +273,7 @@ module mkbranch(Ifc_branch);
 					if(lv_counter != 3'b111)
 						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_counter+1,lv_bank_bits[4]}); //updating counter value only
 				end
+
 				1:
 				begin
 					if(lv_counter != 3'b111)
@@ -276,6 +288,7 @@ module mkbranch(Ifc_branch);
 						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
 					end
 				end
+
 				2:
 				begin
 					if(lv_counter != 3'b111)
@@ -289,6 +302,7 @@ module mkbranch(Ifc_branch);
 						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
 					end
 				end
+
 				3:
 				begin
 					if(lv_counter != 3'b111)
@@ -302,6 +316,7 @@ module mkbranch(Ifc_branch);
 						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
 					end
 				end
+
 				4:
 				begin
 					if(lv_counter != 3'b111)
@@ -325,14 +340,17 @@ module mkbranch(Ifc_branch);
 				rg_bank2_csr_indx <= (rg_bank2_csr_indx << 1) | zeroExtend(rg_global_history[19]^0^rg_bank2_csr_indx[9]); 			//Calculating new values of cyclic
 			 	rg_bank3_csr_indx <= (rg_bank3_csr_indx << 1) | zeroExtend(rg_global_history[39]^0^rg_bank3_csr_indx[9]); 			// shift registers
 			 	rg_bank4_csr_indx <= (rg_bank4_csr_indx << 1) | zeroExtend(rg_global_history[79]^0^rg_bank4_csr_indx[9]);
+
 			 	rg_bank1_csr_p <= {(rg_bank1_csr_p[7:6] << 1) | zeroExtend(rg_global_history[9]^rg_bank1_csr_p[5]), (rg_bank1_csr_p[5:0] << 1) | zeroExtend(0^rg_bank1_csr_p[7])};
 			 	rg_bank2_csr_p <= {(rg_bank2_csr_p[7:4] << 1 | zeroExtend(rg_global_history[19]^rg_bank2_csr_p[3])), rg_bank2_csr_p[3:0] << 1 | zeroExtend(0^rg_bank2_csr_p[7])};
 			 	rg_bank3_csr_p <= rg_bank3_csr_p << 1 | zeroExtend(rg_global_history[39]^0^rg_bank3_csr_p[7]);
 			 	rg_bank4_csr_p <= rg_bank4_csr_p << 1 | zeroExtend(rg_global_history[79]^0^rg_bank4_csr_p[7]);
+
 			 	rg_bank1_csr_s <= {(rg_bank1_csr_s[6:4] << 1 | zeroExtend(rg_global_history[9]^rg_bank1_csr_p[2])), rg_bank1_csr_p[3:0] << 1 | zeroExtend(0^rg_bank1_csr_p[7])};
 			 	rg_bank2_csr_s <= {(rg_bank2_csr_s[5]^(rg_global_history[19])), rg_bank2_csr_p[5:0] << 1 | zeroExtend(0^rg_bank2_csr_p[6])};
 			 	rg_bank3_csr_s <= {(rg_bank3_csr_s[6:5] << 1 | zeroExtend(rg_global_history[39]^rg_bank3_csr_p[4])), rg_bank3_csr_p[4:0] << 1 | zeroExtend(0^rg_bank3_csr_p[7])};
 			 	rg_bank4_csr_s <= {(rg_bank4_csr_s[6:3] << 1 | zeroExtend(rg_global_history[79]^rg_bank4_csr_p[2])), rg_bank4_csr_p[2:0] << 1 | zeroExtend(0^rg_bank4_csr_p[7])};
+
 				//perform bank updation
 				case(lv_bank_num)
 				0:
@@ -340,6 +358,7 @@ module mkbranch(Ifc_branch);
 					if(lv_counter != 3'b000)
 						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_counter-1,lv_bank_bits[4]}); //updating counter value only
 				end
+
 				1:
 				begin
 					if(lv_counter != 3'b000)
@@ -353,6 +372,7 @@ module mkbranch(Ifc_branch);
 						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
 					end
 				end
+
 				2:
 				begin
 					if(lv_counter != 3'b000)
@@ -366,6 +386,7 @@ module mkbranch(Ifc_branch);
 						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
 					end
 				end
+
 				3:
 				begin
 					if(lv_counter != 3'b000)
@@ -379,6 +400,7 @@ module mkbranch(Ifc_branch);
 						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
 					end
 				end
+
 				4:
 				begin
 					if(lv_counter != 3'b000)
@@ -407,14 +429,17 @@ module mkbranch(Ifc_branch);
 				rg_bank2_csr_indx <= (rg_bank2_csr_indx << 1) | {9'b0,(rg_global_history[19]^1^rg_bank2_csr_indx[9])}; 			//Calculating new values of cyclic
 			 	rg_bank3_csr_indx <= (rg_bank3_csr_indx << 1) | {9'b0,(rg_global_history[39]^1^rg_bank3_csr_indx[9])}; 			// shift registers
 			 	rg_bank4_csr_indx <= (rg_bank4_csr_indx << 1) | {9'b0,(rg_global_history[79]^1^rg_bank4_csr_indx[9])};
+
 			 	rg_bank1_csr_p <= {(rg_bank1_csr_p[7:6] << 1) | {1'b0,(rg_global_history[9]^rg_bank1_csr_p[5])}, (rg_bank1_csr_p[5:0] << 1) | {5'b0, 1^rg_bank1_csr_p[7]}};
 			 	rg_bank2_csr_p <= {(rg_bank2_csr_p[7:4] << 1 | zeroExtend(rg_global_history[19]^rg_bank2_csr_p[3])), rg_bank2_csr_p[3:0] << 1 | zeroExtend(1^rg_bank2_csr_p[7])};
 			 	rg_bank3_csr_p <= rg_bank3_csr_p << 1 | zeroExtend(rg_global_history[39]^1^rg_bank3_csr_p[7]);
 			 	rg_bank4_csr_p <= rg_bank4_csr_p << 1 | zeroExtend(rg_global_history[79]^1^rg_bank4_csr_p[7]);
+
 			 	rg_bank1_csr_s <= {(rg_bank1_csr_s[6:4] << 1 | zeroExtend(rg_global_history[9]^rg_bank1_csr_p[2])), rg_bank1_csr_p[3:0] << 1 | zeroExtend(1^rg_bank1_csr_p[7])};
 			 	rg_bank2_csr_s <= {(rg_bank2_csr_s[5]^(rg_global_history[19])), rg_bank2_csr_p[5:0] << 1 | zeroExtend(1^rg_bank2_csr_p[6])};
 			 	rg_bank3_csr_s <= {(rg_bank3_csr_s[6:5] << 1 | zeroExtend(rg_global_history[39]^rg_bank3_csr_p[4])), rg_bank3_csr_p[4:0] << 1 | zeroExtend(1^rg_bank3_csr_p[7])};
 			 	rg_bank4_csr_s <= {(rg_bank4_csr_s[6:3] << 1 | zeroExtend(rg_global_history[79]^rg_bank4_csr_p[2])), rg_bank4_csr_p[2:0] << 1 | zeroExtend(1^rg_bank4_csr_p[7])};
+
 				//perform bank updation
 				case(lv_bank_num)
 				0:
@@ -491,6 +516,7 @@ module mkbranch(Ifc_branch);
 					end
 
 				end
+
 				1:
 				begin
 					//update banks 1 and 0
@@ -560,6 +586,7 @@ module mkbranch(Ifc_branch);
 					end
 					
 				end
+
 				2:
 				begin
 					//update banks 2 and 0
@@ -617,6 +644,7 @@ module mkbranch(Ifc_branch);
 						end
 					end
 				end
+
 				3:
 				begin
 					//update banks 3 and 0
@@ -659,6 +687,7 @@ module mkbranch(Ifc_branch);
 						
 					end
 				end
+
 				4:
 				begin
 					if(lv_counter != 3'b111)
@@ -682,14 +711,17 @@ module mkbranch(Ifc_branch);
 				rg_bank2_csr_indx <= (rg_bank2_csr_indx << 1) | zeroExtend(rg_global_history[19]^0^rg_bank2_csr_indx[9]); 			//Calculating new values of cyclic
 			 	rg_bank3_csr_indx <= (rg_bank3_csr_indx << 1) | zeroExtend(rg_global_history[39]^0^rg_bank3_csr_indx[9]); 			// shift registers
 			 	rg_bank4_csr_indx <= (rg_bank4_csr_indx << 1) | zeroExtend(rg_global_history[79]^0^rg_bank4_csr_indx[9]);
+
 			 	rg_bank1_csr_p <= {(rg_bank1_csr_p[7:6] << 1) | zeroExtend(rg_global_history[9]^rg_bank1_csr_p[5]), (rg_bank1_csr_p[5:0] << 1) | zeroExtend(0^rg_bank1_csr_p[7])};
 			 	rg_bank2_csr_p <= {(rg_bank2_csr_p[7:4] << 1 | zeroExtend(rg_global_history[19]^rg_bank2_csr_p[3])), rg_bank2_csr_p[3:0] << 1 | zeroExtend(0^rg_bank2_csr_p[7])};
 			 	rg_bank3_csr_p <= rg_bank3_csr_p << 1 | zeroExtend(rg_global_history[39]^0^rg_bank3_csr_p[7]);
 			 	rg_bank4_csr_p <= rg_bank4_csr_p << 1 | zeroExtend(rg_global_history[79]^0^rg_bank4_csr_p[7]);
+
 			 	rg_bank1_csr_s <= {(rg_bank1_csr_s[6:4] << 1 | zeroExtend(rg_global_history[9]^rg_bank1_csr_p[2])), rg_bank1_csr_p[3:0] << 1 | zeroExtend(0^rg_bank1_csr_p[7])};
 			 	rg_bank2_csr_s <= {(rg_bank2_csr_s[5]^(rg_global_history[19])), rg_bank2_csr_p[5:0] << 1 | zeroExtend(0^rg_bank2_csr_p[6])};
 			 	rg_bank3_csr_s <= {(rg_bank3_csr_s[6:5] << 1 | zeroExtend(rg_global_history[39]^rg_bank3_csr_p[4])), rg_bank3_csr_p[4:0] << 1 | zeroExtend(0^rg_bank3_csr_p[7])};
 			 	rg_bank4_csr_s <= {(rg_bank4_csr_s[6:3] << 1 | zeroExtend(rg_global_history[79]^rg_bank4_csr_p[2])), rg_bank4_csr_p[2:0] << 1 | zeroExtend(0^rg_bank4_csr_p[7])};
+
 				//perform bank updation
 				case(lv_bank_num)
 				0:
@@ -765,19 +797,20 @@ module mkbranch(Ifc_branch);
 						end
 					end				
 				end
+
 				1:
 				begin
 					//update banks 1 and 0
 					if(lv_counter != 3'b000)
 					begin
-						bram_bank1.b.put(`WRITE,lv_bank1_addr,{lv_counter-1,lv_tag,1'b1});//updating bits u and m and counter value	
-						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
+						bram_bank1.b.put(`WRITE,lv_bank1_addr,{lv_counter-1,lv_tag,1'b0});//updating bits u and m and counter value	
+						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b0});
 					end
 
 					else
 					begin						
-						bram_bank1.b.put(`WRITE,lv_bank1_addr,{lv_counter,lv_tag,1'b1});                            //updating bits u and m only	
-						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
+						bram_bank1.b.put(`WRITE,lv_bank1_addr,{lv_counter,lv_tag,1'b0});                            //updating bits u and m only	
+						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b0});
 					end
 					//update banks 2-->4
 					//check if all u bits are set
@@ -809,6 +842,7 @@ module mkbranch(Ifc_branch);
 									bram_bank2.b.put(`WRITE,lv_bank2_addr,{3'b011,lv_new_tag2,1'b0});
 							end
 						end
+
 						if(lv_bank_bits[1]==1'b0)
 						begin
 							if(lv_bank_bits[4]==1'b1)
@@ -821,6 +855,7 @@ module mkbranch(Ifc_branch);
 									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b011,lv_new_tag3,1'b0});
 							end
 						end
+
 						if(lv_bank_bits[0]==1'b0)
 						begin
 							if(lv_bank_bits[4]==1'b1)
@@ -836,19 +871,20 @@ module mkbranch(Ifc_branch);
 					end
 					
 				end
+
 				2:
 				begin
 					//update banks 2 and 0
 					if(lv_counter != 3'b000)
 					begin
-						bram_bank2.b.put(`WRITE,lv_bank2_addr,{lv_counter-1,lv_tag,1'b1});//updating bits u and m and counter value	
-						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
+						bram_bank2.b.put(`WRITE,lv_bank2_addr,{lv_counter-1,lv_tag,1'b0});//updating bits u and m and counter value	
+						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b0});
 					end
 
 					else
 					begin						
-						bram_bank2.b.put(`WRITE,lv_bank2_addr,{lv_counter,lv_tag,1'b1});                            //updating bits u and m only	
-						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
+						bram_bank2.b.put(`WRITE,lv_bank2_addr,{lv_counter,lv_tag,1'b0});                            //updating bits u and m only	
+						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b0});
 					end
 					//update banks 3-->4
 					//check if all u bits are set
@@ -880,6 +916,7 @@ module mkbranch(Ifc_branch);
 									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b011,lv_new_tag3,1'b0});
 							end
 						end
+
 						if(lv_bank_bits[0]==1'b0)
 						begin
 							if(lv_bank_bits[4]==1'b1)
@@ -894,19 +931,20 @@ module mkbranch(Ifc_branch);
 						end
 					end
 				end
+
 				3:
 				begin
 					//update banks 3 and 0
 					if(lv_counter != 3'b000)
 					begin
-						bram_bank3.b.put(`WRITE,lv_bank3_addr,{lv_counter-1,lv_tag,1'b1});//updating bits u and m and counter value	
-						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
+						bram_bank3.b.put(`WRITE,lv_bank3_addr,{lv_counter-1,lv_tag,1'b0});//updating bits u and m and counter value	
+						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b0});
 					end
 
 					else
 					begin						
-						bram_bank3.b.put(`WRITE,lv_bank3_addr,{lv_counter,lv_tag,1'b1});                            //updating bits u and m only	
-						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
+						bram_bank3.b.put(`WRITE,lv_bank3_addr,{lv_counter,lv_tag,1'b0});                            //updating bits u and m only	
+						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b0});
 					end
 					//update bank 4
 					if(lv_bank_bits[0]==1'b1)
@@ -936,19 +974,20 @@ module mkbranch(Ifc_branch);
 						
 					end
 				end
+
 				4:
 				begin
 					//update banks 4 and 0
 					if(lv_counter != 3'b000)
 					begin
-						bram_bank4.b.put(`WRITE,lv_bank4_addr,{lv_counter-1,lv_tag,1'b1});//updating bits u and m and counter value	
-						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
+						bram_bank4.b.put(`WRITE,lv_bank4_addr,{lv_counter-1,lv_tag,1'b0});//updating bits u and m and counter value	
+						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b0});
 					end
 
 					else
 					begin						
-						bram_bank4.b.put(`WRITE,lv_bank4_addr,{lv_counter,lv_tag,1'b1});                            //updating bits u and m only	
-						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b1});
+						bram_bank4.b.put(`WRITE,lv_bank4_addr,{lv_counter,lv_tag,1'b0});                            //updating bits u and m only	
+						bram_bimodal.b.put(`WRITE,lv_bimodal_addr,{lv_training_bimodal_out,1'b0});
 					end
 				end
 				endcase
