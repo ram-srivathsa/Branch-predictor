@@ -4,6 +4,8 @@ import BRAMCore :: *;
 
 `define SIZE_BIMODAL 4096  //size of the tables
 `define SIZE_GLOBAL 1024
+`define BIMODAL_MAX_ADDR 4095
+`define GLOBAL_MAX_ADDR 1023
 `define DATA_SIZE_BIMODAL 4
 `define DATA_SIZE_GLOBAL 12
 `define TAG_SIZE 8
@@ -60,6 +62,8 @@ interface Ifc_branch;
 	method Bit#(23) mn_get;
 	//to train the predictor
 	method Action ma_train(Gv_pc pc,Bool truth,Bit#(1) prediction,Gv_counter counter,Gv_tag tag,Bit#(5) bank_bits,Gv_bank_num bank_no,Gv_counter bimodal);
+	//to initialize the predictor banks at any time
+	method Action ma_flush;
 endinterface
 
 
@@ -80,6 +84,10 @@ module mkbranch(Ifc_branch);
 	Wire#(Gv_global_data) wr_bank4_out <- mkWire();
 	//copy of incoming pc for update stages
 	Reg#(Gv_pc) rg_pc_copy <- mkReg(0);
+	//to control flushing operation
+	Reg#(Bool) rg_flush <- mkReg(False);
+	Reg#(Gv_bimodal_addr) rg_bimodal_flush_addr <- mkReg(0);
+	Reg#(Gv_global_addr) rg_global_flush_addr <- mkReg(0);
 
 	//global history
 	Reg#(Gv_hist) rg_global_history <- mkReg(0);
@@ -184,6 +192,40 @@ module mkbranch(Ifc_branch);
 	endrule
 
 
+	//initializes all bank entries with counter value=011(weakly taken), tag=0 and LSB=0;stops when the bank with the largest number of entries has been filled
+	rule rl_flush(rg_flush);
+		Gv_global_addr lv_global_size= `GLOBAL_MAX_ADDR;
+		Gv_bimodal_addr lv_bimodal_size= `BIMODAL_MAX_ADDR;
+
+		if(rg_global_flush_addr<= lv_global_size)
+		begin
+			bram_bank1.b.put(`WRITE,rg_global_flush_addr,12'b011000000000);
+			bram_bank2.b.put(`WRITE,rg_global_flush_addr,12'b011000000000);
+			bram_bank3.b.put(`WRITE,rg_global_flush_addr,12'b011000000000);
+			bram_bank4.b.put(`WRITE,rg_global_flush_addr,12'b011000000000);
+			rg_global_flush_addr<= rg_global_flush_addr+1;
+		end
+		
+		else
+		begin
+			if(`GLOBAL_MAX_ADDR>`BIMODAL_MAX_ADDR)
+				rg_flush<= False;	
+		end
+
+		if(rg_bimodal_flush_addr<= lv_bimodal_size)
+		begin
+			bram_bimodal.b.put(`WRITE,rg_bimodal_flush_addr,4'b0110);
+			rg_bimodal_flush_addr<= rg_bimodal_flush_addr+1;
+		end
+
+		else
+		begin
+			if(`BIMODAL_MAX_ADDR>`GLOBAL_MAX_ADDR)
+				rg_flush<= False;
+		end
+	endrule
+
+
 	//enters pc into module and issues read requests to the brams to perform prediction 
 	method Action ma_put(Gv_pc pc);
 		//calculate addresses to be sent to bram banks
@@ -214,15 +256,22 @@ module mkbranch(Ifc_branch);
 
 	endmethod
 
-	
+	//returns prediction along with training data
 	method Bit#(23) mn_get;
 		return {wr_prediction,wr_counter,wr_tag,wr_bank_bits,wr_bank_num,wr_bimodal_counter};
 	endmethod
 
+	//to start flush operation
+	method Action ma_flush if(!rg_flush);        //condition is used to prevent ma_flush from interrupting an already executing flush operation
+		rg_flush<= True;
+		rg_bimodal_flush_addr<= 0;
+		rg_global_flush_addr<= 0;
+	endmethod	
+
 
 	//gets training data into predictor and does the training; also updates the csrs
 
-	method Action ma_train(Gv_pc pc,Bool truth,Bit#(1) prediction,Gv_counter counter,Gv_tag tag,Bit#(5) bank_bits,Gv_bank_num bank_num,Gv_counter bimodal);
+	method Action ma_train(Gv_pc pc,Bool truth,Bit#(1) prediction,Gv_counter counter,Gv_tag tag,Bit#(5) bank_bits,Gv_bank_num bank_num,Gv_counter bimodal) if(!rg_flush);
 		Gv_bimodal_addr lv_bimodal_addr=pc[11:0];
 		Gv_global_addr lv_bank1_addr=fn_hash_indx(pc[19:0],rg_global_history[9:0]);
 		Gv_global_addr lv_bank2_addr=fn_hash_indx(pc[19:0],rg_bank2_csr_indx);
