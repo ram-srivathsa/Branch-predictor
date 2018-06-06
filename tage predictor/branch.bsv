@@ -94,6 +94,8 @@ module mkbranch(Ifc_branch);
 	Reg#(Bool) rg_flush <- mkReg(False);
 	Reg#(Gv_bimodal_addr) rg_bimodal_flush_addr <- mkReg(0);
 	Reg#(Gv_global_addr) rg_global_flush_addr <- mkReg(0);
+	//to initialize the random number generators
+	Reg#(Bool) rg_init_rand <- mkReg(True);
 
 	//global history
 	Reg#(Gv_hist) rg_global_history <- mkReg(0);
@@ -232,6 +234,14 @@ module mkbranch(Ifc_branch);
 		end
 	endrule
 
+	//initializes the random number generators on the very first cycle; doesnt execute ever after that
+	rule rl_init_rand(rg_init_rand);
+		random_bank0.cntrl.init();
+		random_bank1.cntrl.init();
+		random_bank2.cntrl.init();
+		rg_init_rand<= False;
+	endrule
+
 
 	//enters pc into module and issues read requests to the brams to perform prediction 
 	method Action ma_put(Gv_pc pc);
@@ -300,10 +310,6 @@ module mkbranch(Ifc_branch);
 		Gv_tag lv_tag= tag;
 		Gv_counter lv_training_bimodal_out= bimodal;
 
-		//initialize the random bank number generators
-		random_bank0.cntrl.init();
-		random_bank1.cntrl.init();
-		random_bank2.cntrl.init();
 		//get random bank number for stealing
 		Gv_bank_num lv_rand_bank0_num <- random_bank0.next();
 		Gv_bank_num lv_rand_bank1_num <- random_bank1.next();
