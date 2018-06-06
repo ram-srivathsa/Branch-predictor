@@ -1,6 +1,7 @@
 package branch;
 
 import BRAMCore :: *;
+import Randomizable :: *;
 
 `define SIZE_BIMODAL 4096  //size of the tables
 `define SIZE_GLOBAL 1024
@@ -76,6 +77,11 @@ module mkbranch(Ifc_branch);
 	BRAM_DUAL_PORT#(Gv_global_addr,Gv_global_data) bram_bank2 <- mkBRAMCore2Load(`SIZE_GLOBAL,False,gv_file2,True);
 	BRAM_DUAL_PORT#(Gv_global_addr,Gv_global_data) bram_bank3 <- mkBRAMCore2Load(`SIZE_GLOBAL,False,gv_file3,True);
 	BRAM_DUAL_PORT#(Gv_global_addr,Gv_global_data) bram_bank4 <- mkBRAMCore2Load(`SIZE_GLOBAL,False,gv_file4,True);
+	//to generate random bank numbers during entry stealing in training
+	Randomize#(Gv_bank_num) random_bank0 <- mkConstrainedRandomizer(1,4);
+	Randomize#(Gv_bank_num) random_bank1 <- mkConstrainedRandomizer(2,4);
+	Randomize#(Gv_bank_num) random_bank2 <- mkConstrainedRandomizer(3,4);
+
 	//outputs of the banks
 	Wire#(Gv_bimodal_data) wr_bimodal_out <- mkWire();
 	Wire#(Gv_global_data) wr_bank1_out <- mkWire();
@@ -119,6 +125,7 @@ module mkbranch(Ifc_branch);
 	Wire#(Gv_bank_num) wr_bank_num <- mkWire;
 	//counter value of bank 0
 	Wire#(Gv_counter) wr_bimodal_counter <- mkWire;
+
 
 	//rule to perform the complete prediction; computes hash outputs,performs comparisons and muxing(through if else tree)
 	//updates the counter value of matching bank as well as m,u bits of all banks and the bank no. of matching bank
@@ -283,6 +290,7 @@ module mkbranch(Ifc_branch);
 		Gv_tag lv_new_tag3=fn_hash_tag(pc[7:0],rg_bank3_csr_p,rg_bank3_csr_s);
 		Gv_tag lv_new_tag4=fn_hash_tag(pc[7:0],rg_bank4_csr_p,rg_bank4_csr_s);
 
+		//local variables
 		Gv_pc lv_pc= pc;
 		Bit#(1) lv_prediction= prediction;
 		Gv_bank_num lv_bank_num= bank_num;
@@ -291,7 +299,16 @@ module mkbranch(Ifc_branch);
 		Bit#(5) lv_bank_bits= bank_bits; 
 		Gv_tag lv_tag= tag;
 		Gv_counter lv_training_bimodal_out= bimodal;
-		
+
+		//initialize the random bank number generators
+		random_bank0.cntrl.init();
+		random_bank1.cntrl.init();
+		random_bank2.cntrl.init();
+		//get random bank number for stealing
+		Gv_bank_num lv_rand_bank0_num <- random_bank0.next();
+		Gv_bank_num lv_rand_bank1_num <- random_bank1.next();
+		Gv_bank_num lv_rand_bank2_num <- random_bank2.next();
+	
 		//prediction is correct
 		if(lv_truth)
 		begin
@@ -500,15 +517,57 @@ module mkbranch(Ifc_branch);
 					//if all u bits are set
 					if({lv_bank_bits[3],lv_bank_bits[2],lv_bank_bits[1],lv_bank_bits[0]}==4'b1111)
 					begin
-						if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
-							bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
-						else
+						//steal entry from a random bank
+						case(lv_rand_bank0_num)
+						1:
 						begin
-							if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank1.b.put(`WRITE,lv_bank1_addr,{3'b100,lv_new_tag1,1'b0});
+							else
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank1.b.put(`WRITE,lv_bank1_addr,{3'b100,lv_new_tag1,1'b0});
+								else
+									bram_bank1.b.put(`WRITE,lv_bank1_addr,{3'b011,lv_new_tag1,1'b0});
+							end
+						end
+						2:
+						begin
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank2.b.put(`WRITE,lv_bank2_addr,{3'b100,lv_new_tag2,1'b0});
+							else
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank2.b.put(`WRITE,lv_bank2_addr,{3'b100,lv_new_tag2,1'b0});
+								else
+									bram_bank2.b.put(`WRITE,lv_bank2_addr,{3'b011,lv_new_tag2,1'b0});
+							end
+						end
+						3:
+						begin
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b100,lv_new_tag3,1'b0});
+							else
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b100,lv_new_tag3,1'b0});
+								else
+									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b011,lv_new_tag3,1'b0});
+							end
+						end
+						4:
+						begin
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
 								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
 							else
-								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
+								else
+									bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							end
 						end
+						endcase
 					end
 					//some u bits are reset
 					else
@@ -582,15 +641,45 @@ module mkbranch(Ifc_branch);
 					//update banks 2-->4
 					if({lv_bank_bits[2],lv_bank_bits[1],lv_bank_bits[0]}==3'b111)
 					begin
-						if(lv_bank_bits[4]==1'b1)
-							bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
-						else
+						//steal entry from random bank
+						case(lv_rand_bank1_num)
+						2:
 						begin
-							if(lv_training_bimodal_out[2]==1'b1)
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank2.b.put(`WRITE,lv_bank2_addr,{3'b100,lv_new_tag2,1'b0});
+							else
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank2.b.put(`WRITE,lv_bank2_addr,{3'b100,lv_new_tag2,1'b0});
+								else
+									bram_bank2.b.put(`WRITE,lv_bank2_addr,{3'b011,lv_new_tag2,1'b0});
+							end
+						end
+						3:
+						begin
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b100,lv_new_tag3,1'b0});
+							else
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b100,lv_new_tag3,1'b0});
+								else
+									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b011,lv_new_tag3,1'b0});
+							end
+						end
+						4:
+						begin
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
 								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
 							else
-								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
+								else
+									bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							end
 						end
+						endcase
 					end
 					//some u bits are reset
 					else
@@ -653,15 +742,33 @@ module mkbranch(Ifc_branch);
 					//update banks 3-->4
 					if({lv_bank_bits[1],lv_bank_bits[0]}==2'b11)
 					begin
-						if(lv_bank_bits[4]==1'b1)
-							bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
-						else
+						//steal entry from random bank
+						case(lv_rand_bank2_num)
+						3:
 						begin
-							if(lv_training_bimodal_out[2]==1'b1)
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b100,lv_new_tag3,1'b0});
+							else
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b100,lv_new_tag3,1'b0});
+								else
+									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b011,lv_new_tag3,1'b0});
+							end
+						end
+						4:
+						begin
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
 								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
 							else
-								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
+								else
+									bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							end
 						end
+						endcase
 					end
 					//some u bits are reset
 					else
@@ -782,15 +889,57 @@ module mkbranch(Ifc_branch);
 					//if all u bits are set
 					if({lv_bank_bits[3],lv_bank_bits[2],lv_bank_bits[1],lv_bank_bits[0]}==4'b1111)
 					begin
-						if(lv_bank_bits[4]==1'b1)
-							bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
-						else
+						//steal entry from random bank
+						case(lv_rand_bank0_num)
+						1:
 						begin
-							if(lv_training_bimodal_out[2]==1'b1)
-								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank1.b.put(`WRITE,lv_bank1_addr,{3'b011,lv_new_tag1,1'b0});
 							else
-								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank1.b.put(`WRITE,lv_bank1_addr,{3'b100,lv_new_tag1,1'b0});
+								else
+									bram_bank1.b.put(`WRITE,lv_bank1_addr,{3'b011,lv_new_tag1,1'b0});
+							end
 						end
+						2:
+						begin
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank2.b.put(`WRITE,lv_bank2_addr,{3'b011,lv_new_tag2,1'b0});
+							else
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank2.b.put(`WRITE,lv_bank2_addr,{3'b100,lv_new_tag2,1'b0});
+								else
+									bram_bank2.b.put(`WRITE,lv_bank2_addr,{3'b011,lv_new_tag2,1'b0});
+							end
+						end
+						3:
+						begin
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b011,lv_new_tag3,1'b0});
+							else
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b100,lv_new_tag3,1'b0});
+								else
+									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b011,lv_new_tag3,1'b0});
+							end
+						end
+						4:
+						begin
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							else
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
+								else
+									bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							end
+						end
+						endcase
 					end
 					//some u bits are reset
 					else
@@ -865,15 +1014,45 @@ module mkbranch(Ifc_branch);
 					//check if all u bits are set
 					if({lv_bank_bits[2],lv_bank_bits[1],lv_bank_bits[0]}==3'b111)
 					begin
-						if(lv_bank_bits[4]==1'b1)
-							bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
-						else
+						//steal entry from random bank
+						case(lv_rand_bank1_num)
+						2:
 						begin
-							if(lv_training_bimodal_out[2]==1'b1)
-								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank2.b.put(`WRITE,lv_bank2_addr,{3'b011,lv_new_tag2,1'b0});
 							else
-								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank2.b.put(`WRITE,lv_bank2_addr,{3'b100,lv_new_tag2,1'b0});
+								else
+									bram_bank2.b.put(`WRITE,lv_bank2_addr,{3'b011,lv_new_tag2,1'b0});
+							end
 						end
+						3:
+						begin
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b011,lv_new_tag3,1'b0});
+							else
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b100,lv_new_tag3,1'b0});
+								else
+									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b011,lv_new_tag3,1'b0});
+							end
+						end
+						4:
+						begin
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							else
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
+								else
+									bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							end
+						end
+						endcase
 					end
 					//some u bits are reset
 					else
@@ -939,15 +1118,33 @@ module mkbranch(Ifc_branch);
 					//check if all u bits are set
 					if({lv_bank_bits[1],lv_bank_bits[0]}==2'b11)
 					begin
-						if(lv_bank_bits[4]==1'b1)
-							bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
-						else
+						//steal entry from random bank
+						case(lv_rand_bank2_num)
+						3:
 						begin
-							if(lv_training_bimodal_out[2]==1'b1)
-								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b011,lv_new_tag3,1'b0});
 							else
-								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b100,lv_new_tag3,1'b0});
+								else
+									bram_bank3.b.put(`WRITE,lv_bank3_addr,{3'b011,lv_new_tag3,1'b0});
+							end
 						end
+						4:
+						begin
+							if(lv_bank_bits[4]==1'b1)                                                  //if m bit is set
+								bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							else
+							begin
+								if(lv_training_bimodal_out[2]==1'b1)                              //check bimodal prediction
+									bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b100,lv_new_tag4,1'b0});
+								else
+									bram_bank4.b.put(`WRITE,lv_bank4_addr,{3'b011,lv_new_tag4,1'b0});
+							end
+						end
+						endcase
 					end
 					//some u bits are reset
 					else
