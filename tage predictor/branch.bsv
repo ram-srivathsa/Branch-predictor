@@ -217,6 +217,10 @@ module mkbranch(Ifc_branch);
 		
 		else
 		begin
+			bram_bank1.b.put(`WRITE,lv_global_size,12'b011000000000);
+			bram_bank2.b.put(`WRITE,lv_global_size,12'b011000000000);
+			bram_bank3.b.put(`WRITE,lv_global_size,12'b011000000000);
+			bram_bank4.b.put(`WRITE,lv_global_size,12'b011000000000);
 			if(`GLOBAL_MAX_ADDR>`BIMODAL_MAX_ADDR)
 				rg_flush<= False;	
 		end
@@ -229,6 +233,7 @@ module mkbranch(Ifc_branch);
 
 		else
 		begin
+			bram_bimodal.b.put(`WRITE,lv_bimodal_size,4'b0110);
 			if(`BIMODAL_MAX_ADDR>`GLOBAL_MAX_ADDR)
 				rg_flush<= False;
 		end
