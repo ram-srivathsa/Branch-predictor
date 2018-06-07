@@ -206,7 +206,7 @@ module mkbranch(Ifc_branch);
 		Gv_global_addr lv_global_size= `GLOBAL_MAX_ADDR;
 		Gv_bimodal_addr lv_bimodal_size= `BIMODAL_MAX_ADDR;
 
-		if(rg_global_flush_addr<= lv_global_size)
+		if(rg_global_flush_addr< lv_global_size)
 		begin
 			bram_bank1.b.put(`WRITE,rg_global_flush_addr,12'b011000000000);
 			bram_bank2.b.put(`WRITE,rg_global_flush_addr,12'b011000000000);
@@ -225,7 +225,7 @@ module mkbranch(Ifc_branch);
 				rg_flush<= False;	
 		end
 
-		if(rg_bimodal_flush_addr<= lv_bimodal_size)
+		if(rg_bimodal_flush_addr< lv_bimodal_size)
 		begin
 			bram_bimodal.b.put(`WRITE,rg_bimodal_flush_addr,4'b0110);
 			rg_bimodal_flush_addr<= rg_bimodal_flush_addr+1;
