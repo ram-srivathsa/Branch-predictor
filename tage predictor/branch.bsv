@@ -3,6 +3,7 @@ package branch;
 import BRAMCore :: *;
 import Randomizable :: *;
 
+//size of the tables are assumed by default to be the following values; if any changes are made, corresponding changes have to be made in the address calculations in the rules and methods and functions
 `define SIZE_BIMODAL 4096  //size of the tables
 `define SIZE_GLOBAL 1024
 `define BIMODAL_MAX_ADDR 4095
@@ -92,7 +93,9 @@ module mkbranch(Ifc_branch);
 	Reg#(Gv_pc) rg_pc_copy <- mkReg(0);
 	//to control flushing operation
 	Reg#(Bool) rg_flush <- mkReg(False);
-	Reg#(Gv_bimodal_addr) rg_bimodal_flush_addr <- mkReg(0);
+	//holds the addresses of the memory locations while flushing; incremented from 0 till max address
+	//bimodal flush address is taken to be 13 bits instead of Gv_bimodal_addr because it reduces critical path delay during comparison in rl_flush
+	Reg#(Bit#(13)) rg_bimodal_flush_addr <- mkReg(0);
 	Reg#(Gv_global_addr) rg_global_flush_addr <- mkReg(0);
 	//to initialize the random number generators
 	Reg#(Bool) rg_init_rand <- mkReg(True);
@@ -204,7 +207,6 @@ module mkbranch(Ifc_branch);
 	//initializes all bank entries with counter value=011(weakly taken), tag=0 and LSB=0;stops when the bank with the largest number of entries has been filled
 	rule rl_flush(rg_flush);
 		Gv_global_addr lv_global_size= `GLOBAL_MAX_ADDR;
-		Gv_bimodal_addr lv_bimodal_size= `BIMODAL_MAX_ADDR;
 
 		if(rg_global_flush_addr< lv_global_size)
 		begin
@@ -221,19 +223,20 @@ module mkbranch(Ifc_branch);
 			bram_bank2.b.put(`WRITE,lv_global_size,12'b011000000000);
 			bram_bank3.b.put(`WRITE,lv_global_size,12'b011000000000);
 			bram_bank4.b.put(`WRITE,lv_global_size,12'b011000000000);
-			if(`GLOBAL_MAX_ADDR>`BIMODAL_MAX_ADDR)
+			if(`GLOBAL_MAX_ADDR>=`BIMODAL_MAX_ADDR)
 				rg_flush<= False;	
 		end
 
-		if(rg_bimodal_flush_addr< lv_bimodal_size)
+		//different comparison scheme than what is followed for global banks to reduce critical path delay and increase maximum operating frequency
+		//min clk period changes from 3.4ns to 3.23 ns on doing this 
+		if(rg_bimodal_flush_addr[12]==0)
 		begin
-			bram_bimodal.b.put(`WRITE,rg_bimodal_flush_addr,4'b0110);
+			bram_bimodal.b.put(`WRITE,rg_bimodal_flush_addr[11:0],4'b0110);
 			rg_bimodal_flush_addr<= rg_bimodal_flush_addr+1;
 		end
 
 		else
 		begin
-			bram_bimodal.b.put(`WRITE,lv_bimodal_size,4'b0110);
 			if(`BIMODAL_MAX_ADDR>`GLOBAL_MAX_ADDR)
 				rg_flush<= False;
 		end
