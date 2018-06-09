@@ -12,7 +12,8 @@ The 'verilog' folder contains the verilog files that can be used for analyzing t
 The branch predictor has been implemented according to the exact same specifications as is given in the reference research paper by Michaud.
 
 Results: 
-On testing the predictor with the Dhrystone benchmark, 110 misprediction were reported out of a total of 58,800 branches which corresponds to a prediction accuracy of 99.8%. 
+
+On testing the predictor with the Dhrystone benchmark, 110 misprediction were reported out of a total of 58,800 branches which corresponds to a prediction accuracy of 99.8%. For the first 1000 branches, 18  mispredictions occurred which corresponds to an accuracy of 98.2%.
 
 In Vivado, the maximum operating frequency of the design was found to be 309MHz on an Artix 7 board while the utilization report may be found in the 'vivado' folder.
 
