@@ -1,0 +1,41 @@
+#-----------------------------------------------------------
+# Vivado v2016.1 (64-bit)
+# SW Build 1538259 on Fri Apr  8 15:45:23 MDT 2016
+# IP Build 1537824 on Fri Apr  8 04:28:57 MDT 2016
+# Start of session at: Thu Jun  7 13:42:37 2018
+# Process ID: 14223
+# Current directory: /home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/project_1
+# Command line: vivado project_1.xpr
+# Log file: /home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/project_1/vivado.log
+# Journal file: /home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/project_1/vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project project_1.xpr
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Vivado/Vivado/2016.1/data/ip'.
+open_project: Time (s): cpu = 00:00:10 ; elapsed = 00:00:05 . Memory (MB): peak = 5904.031 ; gain = 122.777 ; free physical = 12392 ; free virtual = 29818
+update_compile_order -fileset sources_1
+open_run synth_1 -name synth_1
+Design is defaulting to impl run constrset: constrs_1
+Design is defaulting to synth run part: xc7a200tfbg676-2
+INFO: [Netlist 29-17] Analyzing 78 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.1
+INFO: [Device 21-403] Loading part xc7a200tfbg676-2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Parsing XDC File [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/project_1/project_1.srcs/constrs_1/new/timing.xdc]
+Finished Parsing XDC File [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/project_1/project_1.srcs/constrs_1/new/timing.xdc]
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+open_run: Time (s): cpu = 00:00:14 ; elapsed = 00:00:11 . Memory (MB): peak = 6331.738 ; gain = 416.082 ; free physical = 12032 ; free virtual = 29454
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 4 CPUs
+exit
+INFO: [Common 17-206] Exiting Vivado at Thu Jun  7 13:43:34 2018...
