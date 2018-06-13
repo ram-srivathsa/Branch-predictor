@@ -1,0 +1,748 @@
+#-----------------------------------------------------------
+# Vivado v2016.1 (64-bit)
+# SW Build 1538259 on Fri Apr  8 15:45:23 MDT 2016
+# IP Build 1537824 on Fri Apr  8 04:28:57 MDT 2016
+# Start of session at: Sat Jun  9 10:12:54 2018
+# Process ID: 3036
+# Current directory: /home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch
+# Command line: vivado -mode tcl -source .//src/tcl/run.tcl
+# Log file: /home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/vivado.log
+# Journal file: /home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/vivado.jou
+#-----------------------------------------------------------
+source .//src/tcl/run.tcl
+# set curdir [ file dirname [ file normalize [ info script ] ] ]
+# source $curdir/env.tcl
+## global home_dir
+## global fpga_dir
+## global core_project_dir
+## set home_dir $::env(HOMEDIR)
+## set fpga_dir $home_dir/fpga
+## set core_project_dir $fpga_dir/$::env(TOP)
+## set core_project $::env(TOP)
+## puts "home_dir: $home_dir"
+home_dir: ./
+## puts "fpga_dir: $fpga_dir"
+fpga_dir: .//fpga
+## puts "core_project_dir: $core_project_dir"
+core_project_dir: .//fpga/mkbranch
+# open_project $core_project_dir/$core_project.xpr
+Scanning sources...
+Finished scanning sources
+# if {[string equal [get_filesets -quiet constrs_1] ""]} {
+#   create_fileset -constrset constrs_1
+# }
+# set obj [get_filesets constrs_1]
+# set file "[file normalize "$home_dir/src/tcl/constraints.xdc"]"
+# set file_added [add_files -norecurse -fileset $obj $file]
+# reset_run core_synth_1
+# reset_run core_impl_1
+# launch_run core_synth_1 -jobs 4
+INFO: [HDL 9-2216] Analyzing Verilog file "/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v" into library work [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v" into library work [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/mkbranch.v" into library work [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/mkbranch.v:1]
+CRITICAL WARNING: [filemgmt 20-742] The top module "mkSoC" specified for this project can not be validated. The current project is using automatic hierarchy update mode, and hence a new suitable replacement top will be automatically selected. If this is not desired, please change the hierarchy update mode to one of the manual compile order modes first, and then set top to any desired value.
+Resolution: To switch to manual update order go to the Sources view, right-click on any node in the hierarchy and in the context menu select: 'Hierarchy Update' option 'No Update' or run the following Tcl Command: set_property source_mgmt_mode None [current_project] (which is the Manual Compile Order mode).
+[Sat Jun  9 10:13:02 2018] Launched core_synth_1...
+Run output will be captured here: /home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/fpga/mkbranch/mkbranch.runs/core_synth_1/runme.log
+# wait_on_run core_synth_1
+[Sat Jun  9 10:13:02 2018] Waiting for core_synth_1 to finish...
+
+*** Running vivado
+    with args -log mkbranch.vds -m64 -mode batch -messageDb vivado.pb -notrace -source mkbranch.tcl
+
+
+****** Vivado v2016.1 (64-bit)
+  **** SW Build 1538259 on Fri Apr  8 15:45:23 MDT 2016
+  **** IP Build 1537824 on Fri Apr  8 04:28:57 MDT 2016
+    ** Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
+
+source mkbranch.tcl -notrace
+WARNING: [Board 49-26] cannot add Board Part digilentinc.com:arty-s7-25:part0:1.0 available at /tools/Vivado/Vivado/2016.1/data/boards/board_files/arty-s7-25/E.0/board.xml as part xc7s25csga324-1 specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part digilentinc.com:arty-s7-50:part0:1.0 available at /tools/Vivado/Vivado/2016.1/data/boards/board_files/arty-s7-50/B.0/board.xml as part xc7s50csga324-1 specified in board_part file is either invalid or not available
+Command: synth_design -top mkbranch -part xc7a100tcsg324-1 -flatten_hierarchy none
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a100t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a100t'
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 3112 
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 1057.949 ; gain = 171.090 ; free physical = 12880 ; free virtual = 29666
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'mkbranch' [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/mkbranch.v:46]
+INFO: [Synth 8-638] synthesizing module 'BRAM2Load' [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:30]
+	Parameter FILENAME bound to: bank1.bin - type: string 
+	Parameter PIPELINED bound to: 1'b0 
+	Parameter ADDR_WIDTH bound to: 10 - type: integer 
+	Parameter DATA_WIDTH bound to: 12 - type: integer 
+	Parameter MEMSIZE bound to: 11'b10000000000 
+	Parameter BINARY bound to: 1'b1 
+CRITICAL WARNING: [Synth 8-4445] could not open $readmem data file 'bank1.bin'; please make sure the file is added to project and has read permission, ignoring [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:87]
+INFO: [Synth 8-256] done synthesizing module 'BRAM2Load' (1#1) [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:30]
+INFO: [Synth 8-638] synthesizing module 'BRAM2Load__parameterized0' [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:30]
+	Parameter FILENAME bound to: bank2.bin - type: string 
+	Parameter PIPELINED bound to: 1'b0 
+	Parameter ADDR_WIDTH bound to: 10 - type: integer 
+	Parameter DATA_WIDTH bound to: 12 - type: integer 
+	Parameter MEMSIZE bound to: 11'b10000000000 
+	Parameter BINARY bound to: 1'b1 
+CRITICAL WARNING: [Synth 8-4445] could not open $readmem data file 'bank2.bin'; please make sure the file is added to project and has read permission, ignoring [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:87]
+INFO: [Synth 8-256] done synthesizing module 'BRAM2Load__parameterized0' (1#1) [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:30]
+INFO: [Synth 8-638] synthesizing module 'BRAM2Load__parameterized1' [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:30]
+	Parameter FILENAME bound to: bank3.bin - type: string 
+	Parameter PIPELINED bound to: 1'b0 
+	Parameter ADDR_WIDTH bound to: 10 - type: integer 
+	Parameter DATA_WIDTH bound to: 12 - type: integer 
+	Parameter MEMSIZE bound to: 11'b10000000000 
+	Parameter BINARY bound to: 1'b1 
+CRITICAL WARNING: [Synth 8-4445] could not open $readmem data file 'bank3.bin'; please make sure the file is added to project and has read permission, ignoring [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:87]
+INFO: [Synth 8-256] done synthesizing module 'BRAM2Load__parameterized1' (1#1) [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:30]
+INFO: [Synth 8-638] synthesizing module 'BRAM2Load__parameterized2' [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:30]
+	Parameter FILENAME bound to: bank4.bin - type: string 
+	Parameter PIPELINED bound to: 1'b0 
+	Parameter ADDR_WIDTH bound to: 10 - type: integer 
+	Parameter DATA_WIDTH bound to: 12 - type: integer 
+	Parameter MEMSIZE bound to: 11'b10000000000 
+	Parameter BINARY bound to: 1'b1 
+CRITICAL WARNING: [Synth 8-4445] could not open $readmem data file 'bank4.bin'; please make sure the file is added to project and has read permission, ignoring [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:87]
+INFO: [Synth 8-256] done synthesizing module 'BRAM2Load__parameterized2' (1#1) [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:30]
+INFO: [Synth 8-638] synthesizing module 'BRAM2Load__parameterized3' [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:30]
+	Parameter FILENAME bound to: bimodal.bin - type: string 
+	Parameter PIPELINED bound to: 1'b0 
+	Parameter ADDR_WIDTH bound to: 12 - type: integer 
+	Parameter DATA_WIDTH bound to: 4 - type: integer 
+	Parameter MEMSIZE bound to: 13'b1000000000000 
+	Parameter BINARY bound to: 1'b1 
+CRITICAL WARNING: [Synth 8-4445] could not open $readmem data file 'bimodal.bin'; please make sure the file is added to project and has read permission, ignoring [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:87]
+INFO: [Synth 8-256] done synthesizing module 'BRAM2Load__parameterized3' (1#1) [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/BRAM2Load.v:30]
+INFO: [Synth 8-638] synthesizing module 'ConstrainedRandom' [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v:39]
+	Parameter width bound to: 3 - type: integer 
+	Parameter min bound to: 3'b001 
+	Parameter max bound to: 3'b100 
+WARNING: [Synth 8-639] system function call 'random' not supported [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v:63]
+WARNING: [Synth 8-639] system function call 'random' not supported [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v:63]
+INFO: [Synth 8-256] done synthesizing module 'ConstrainedRandom' (2#1) [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v:39]
+INFO: [Synth 8-638] synthesizing module 'ConstrainedRandom__parameterized0' [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v:39]
+	Parameter width bound to: 3 - type: integer 
+	Parameter min bound to: 3'b010 
+	Parameter max bound to: 3'b100 
+WARNING: [Synth 8-639] system function call 'random' not supported [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v:63]
+WARNING: [Synth 8-639] system function call 'random' not supported [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v:63]
+INFO: [Synth 8-256] done synthesizing module 'ConstrainedRandom__parameterized0' (2#1) [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v:39]
+INFO: [Synth 8-638] synthesizing module 'ConstrainedRandom__parameterized1' [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v:39]
+	Parameter width bound to: 3 - type: integer 
+	Parameter min bound to: 3'b011 
+	Parameter max bound to: 3'b100 
+WARNING: [Synth 8-639] system function call 'random' not supported [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v:63]
+WARNING: [Synth 8-639] system function call 'random' not supported [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v:63]
+INFO: [Synth 8-256] done synthesizing module 'ConstrainedRandom__parameterized1' (2#1) [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/ConstrainedRandom.v:39]
+INFO: [Synth 8-256] done synthesizing module 'mkbranch' (3#1) [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/mkbranch.v:46]
+WARNING: [Synth 8-3917] design mkbranch has port RDY_ma_put driven by constant 1
+WARNING: [Synth 8-3917] design mkbranch has port RDY_mn_get driven by constant 1
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[63]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[62]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[61]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[60]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[59]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[58]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[57]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[56]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[55]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[54]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[53]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[52]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[51]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[50]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[49]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[48]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[47]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[46]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[45]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[44]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[43]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[42]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[41]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[40]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[39]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[38]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[37]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[36]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[35]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[34]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[33]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[32]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[31]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[30]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[29]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[28]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[27]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[26]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[25]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[24]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[23]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[22]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[21]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[20]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1098.387 ; gain = 211.527 ; free physical = 12836 ; free virtual = 29625
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1098.387 ; gain = 211.527 ; free physical = 12835 ; free virtual = 29624
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xc7a100tcsg324-1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/src/tcl/constraints.xdc]
+INFO: [Vivado 12-2286] Implicit search of objects for pattern 'CLK' matched to 'port' objects. [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/src/tcl/constraints.xdc:1]
+Resolution: To avoid ambiguous patterns, provide proper objects using get commands e.g. [get_nets xyz].
+Finished Parsing XDC File [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/src/tcl/constraints.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/src/tcl/constraints.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/mkbranch_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/mkbranch_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1441.105 ; gain = 0.000 ; free physical = 12628 ; free virtual = 29445
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1441.105 ; gain = 554.246 ; free physical = 12627 ; free virtual = 29444
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a100tcsg324-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1441.105 ; gain = 554.246 ; free physical = 12628 ; free virtual = 29444
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 1441.105 ; gain = 554.246 ; free physical = 12628 ; free virtual = 29444
+---------------------------------------------------------------------------------
+INFO: [Synth 8-4471] merging register 'random_bank1_initialized_reg' into 'random_bank0_initialized_reg' [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/mkbranch.v:372]
+INFO: [Synth 8-4471] merging register 'random_bank2_initialized_reg' into 'random_bank0_initialized_reg' [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/verilog/mkbranch.v:373]
+INFO: [Synth 8-5544] ROM "IF_ma_train_bank_bits_BIT_4_71_THEN_0b11_ELSE__ETC___d3010" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-5544] ROM "IF_ma_train_bank_bits_BIT_4_71_OR_ma_train_bim_ETC___d304" won't be mapped to Block RAM because address size (1) smaller than threshold (5)
+INFO: [Synth 8-3971] The signal RAM_reg was recognized as a true dual port RAM template.
+INFO: [Synth 8-3971] The signal RAM_reg was recognized as a true dual port RAM template.
+INFO: [Synth 8-3971] The signal RAM_reg was recognized as a true dual port RAM template.
+INFO: [Synth 8-3971] The signal RAM_reg was recognized as a true dual port RAM template.
+INFO: [Synth 8-3971] The signal RAM_reg was recognized as a true dual port RAM template.
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:12 ; elapsed = 00:00:14 . Memory (MB): peak = 1441.105 ; gain = 554.246 ; free physical = 12620 ; free virtual = 29436
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     10 Bit       Adders := 1     
+	   2 Input      3 Bit       Adders := 2     
++---XORs : 
+	   2 Input     10 Bit         XORs := 10    
+	   2 Input      8 Bit         XORs := 12    
+	   2 Input      1 Bit         XORs := 17    
++---Registers : 
+	               80 Bit    Registers := 1     
+	               64 Bit    Registers := 1     
+	               12 Bit    Registers := 8     
+	               10 Bit    Registers := 4     
+	                8 Bit    Registers := 4     
+	                7 Bit    Registers := 4     
+	                4 Bit    Registers := 2     
+	                3 Bit    Registers := 3     
+	                1 Bit    Registers := 3     
++---RAMs : 
+	              16K Bit         RAMs := 1     
+	              12K Bit         RAMs := 4     
++---Muxes : 
+	   2 Input     12 Bit        Muxes := 5     
+	   2 Input     10 Bit        Muxes := 4     
+	   2 Input      8 Bit        Muxes := 14    
+	   2 Input      4 Bit        Muxes := 2     
+	   5 Input      3 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 39    
+	   3 Input      3 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 35    
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+Hierarchical RTL Component report 
+Module mkbranch 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     10 Bit       Adders := 1     
+	   2 Input      3 Bit       Adders := 2     
++---XORs : 
+	   2 Input     10 Bit         XORs := 10    
+	   2 Input      8 Bit         XORs := 12    
+	   2 Input      1 Bit         XORs := 17    
++---Registers : 
+	               80 Bit    Registers := 1     
+	               64 Bit    Registers := 1     
+	               10 Bit    Registers := 4     
+	                8 Bit    Registers := 4     
+	                7 Bit    Registers := 4     
+	                1 Bit    Registers := 3     
++---Muxes : 
+	   2 Input     12 Bit        Muxes := 5     
+	   2 Input     10 Bit        Muxes := 4     
+	   2 Input      8 Bit        Muxes := 14    
+	   2 Input      4 Bit        Muxes := 2     
+	   5 Input      3 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 39    
+	   3 Input      3 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 32    
+Module BRAM2Load 
+Detailed RTL Component Info : 
++---Registers : 
+	               12 Bit    Registers := 2     
++---RAMs : 
+	              12K Bit         RAMs := 1     
+Module BRAM2Load__parameterized0 
+Detailed RTL Component Info : 
++---Registers : 
+	               12 Bit    Registers := 2     
++---RAMs : 
+	              12K Bit         RAMs := 1     
+Module BRAM2Load__parameterized1 
+Detailed RTL Component Info : 
++---Registers : 
+	               12 Bit    Registers := 2     
++---RAMs : 
+	              12K Bit         RAMs := 1     
+Module BRAM2Load__parameterized2 
+Detailed RTL Component Info : 
++---Registers : 
+	               12 Bit    Registers := 2     
++---RAMs : 
+	              12K Bit         RAMs := 1     
+Module BRAM2Load__parameterized3 
+Detailed RTL Component Info : 
++---Registers : 
+	                4 Bit    Registers := 2     
++---RAMs : 
+	              16K Bit         RAMs := 1     
+Module ConstrainedRandom 
+Detailed RTL Component Info : 
++---Registers : 
+	                3 Bit    Registers := 1     
++---Muxes : 
+	   2 Input      1 Bit        Muxes := 1     
+Module ConstrainedRandom__parameterized0 
+Detailed RTL Component Info : 
++---Registers : 
+	                3 Bit    Registers := 1     
++---Muxes : 
+	   2 Input      1 Bit        Muxes := 1     
+Module ConstrainedRandom__parameterized1 
+Detailed RTL Component Info : 
++---Registers : 
+	                3 Bit    Registers := 1     
++---Muxes : 
+	   2 Input      1 Bit        Muxes := 1     
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 240 (col length:80)
+BRAMs: 270 (col length: RAMB18 80 RAMB36 40)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+Start Parallel Synthesis Optimization  : Time (s): cpu = 00:00:12 ; elapsed = 00:00:14 . Memory (MB): peak = 1441.105 ; gain = 554.246 ; free physical = 12620 ; free virtual = 29436
+---------------------------------------------------------------------------------
+Start Cross Boundary Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-3917] design mkbranch has port RDY_ma_put driven by constant 1
+WARNING: [Synth 8-3917] design mkbranch has port RDY_mn_get driven by constant 1
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[63]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[62]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[61]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[60]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[59]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[58]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[57]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[56]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[55]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[54]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[53]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[52]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[51]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[50]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[49]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[48]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[47]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[46]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[45]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[44]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[43]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[42]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[41]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[40]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[39]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[38]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[37]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[36]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[35]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[34]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[33]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[32]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[31]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[30]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[29]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[28]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[27]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[26]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[25]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[24]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[23]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[22]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[21]
+WARNING: [Synth 8-3331] design mkbranch has unconnected port ma_train_pc[20]
+---------------------------------------------------------------------------------
+Finished Cross Boundary Optimization : Time (s): cpu = 00:00:12 ; elapsed = 00:00:14 . Memory (MB): peak = 1441.105 ; gain = 554.246 ; free physical = 12612 ; free virtual = 29428
+---------------------------------------------------------------------------------
+Finished Parallel Reinference  : Time (s): cpu = 00:00:12 ; elapsed = 00:00:14 . Memory (MB): peak = 1441.105 ; gain = 554.246 ; free physical = 12612 ; free virtual = 29428
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Preliminary Mapping  Report (see note below)
++------------+------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name | RTL Object | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++------------+------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|BRAM2Load   | RAM_reg    | 1 K x 12(WRITE_FIRST)  | W | R | 1 K x 12(WRITE_FIRST)  | W | R | Port A and B     | 1      | 0      | 
+|BRAM2Load   | RAM_reg    | 1 K x 12(WRITE_FIRST)  | W | R | 1 K x 12(WRITE_FIRST)  | W | R | Port A and B     | 1      | 0      | 
+|BRAM2Load   | RAM_reg    | 1 K x 12(WRITE_FIRST)  | W | R | 1 K x 12(WRITE_FIRST)  | W | R | Port A and B     | 1      | 0      | 
+|BRAM2Load   | RAM_reg    | 1 K x 12(WRITE_FIRST)  | W | R | 1 K x 12(WRITE_FIRST)  | W | R | Port A and B     | 1      | 0      | 
+|BRAM2Load   | RAM_reg    | 4 K x 4(WRITE_FIRST)   | W | R | 4 K x 4(WRITE_FIRST)   | W | R | Port A and B     | 1      | 0      | 
++------------+------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+Note: The table above is a preliminary report that shows the Block RAMs at the current stage of the synthesis flow. Some Block RAMs may be reimplemented as non Block RAM primitives later in the synthesis flow. Multiple instantiated Block RAMs are reported only once. 
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Area Optimization
+---------------------------------------------------------------------------------
+INFO: [Synth 8-3886] merging instance 'random_bank2/OUT_reg[1]' (FDSE) to 'random_bank2/OUT_reg[0]'
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (random_bank2/\OUT_reg[2] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (random_bank2/\OUT_reg[0] )
+INFO: [Synth 8-3886] merging instance 'random_bank0/OUT_reg[2]' (FDRE) to 'random_bank0/OUT_reg[1]'
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (random_bank0/\OUT_reg[1] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (random_bank0/\OUT_reg[0] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (random_bank1/\OUT_reg[1] )
+INFO: [Synth 8-3886] merging instance 'random_bank1/OUT_reg[2]' (FDRE) to 'random_bank1/OUT_reg[0]'
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (random_bank1/\OUT_reg[0] )
+INFO: [Synth 8-3886] merging instance 'rg_bank1_csr_p_reg[0]' (FDRE) to 'rg_bank1_csr_s_reg[0]'
+INFO: [Synth 8-3886] merging instance 'rg_bank1_csr_p_reg[1]' (FDRE) to 'rg_bank1_csr_s_reg[1]'
+INFO: [Synth 8-3886] merging instance 'rg_bank1_csr_p_reg[2]' (FDRE) to 'rg_bank1_csr_s_reg[2]'
+INFO: [Synth 8-3886] merging instance 'rg_bank1_csr_p_reg[3]' (FDRE) to 'rg_bank1_csr_s_reg[3]'
+INFO: [Synth 8-3886] merging instance 'rg_bank2_csr_s_reg[5]' (FDRE) to 'rg_bank2_csr_p_reg[5]'
+INFO: [Synth 8-3886] merging instance 'rg_bank2_csr_p_reg[1]' (FDRE) to 'rg_bank2_csr_s_reg[1]'
+INFO: [Synth 8-3886] merging instance 'rg_bank2_csr_p_reg[2]' (FDRE) to 'rg_bank2_csr_s_reg[2]'
+INFO: [Synth 8-3886] merging instance 'rg_bank2_csr_p_reg[3]' (FDRE) to 'rg_bank2_csr_s_reg[3]'
+INFO: [Synth 8-3886] merging instance 'rg_bank3_csr_p_reg[1]' (FDRE) to 'rg_bank3_csr_s_reg[1]'
+INFO: [Synth 8-3886] merging instance 'rg_bank3_csr_p_reg[2]' (FDRE) to 'rg_bank3_csr_s_reg[2]'
+INFO: [Synth 8-3886] merging instance 'rg_bank3_csr_p_reg[3]' (FDRE) to 'rg_bank3_csr_s_reg[3]'
+INFO: [Synth 8-3886] merging instance 'rg_bank3_csr_p_reg[4]' (FDRE) to 'rg_bank3_csr_s_reg[4]'
+INFO: [Synth 8-3886] merging instance 'rg_bank4_csr_p_reg[1]' (FDRE) to 'rg_bank4_csr_s_reg[1]'
+INFO: [Synth 8-3886] merging instance 'rg_bank4_csr_p_reg[2]' (FDRE) to 'rg_bank4_csr_s_reg[2]'
+WARNING: [Synth 8-3332] Sequential element (OUT_reg[2]) is unused and will be removed from module ConstrainedRandom.
+WARNING: [Synth 8-3332] Sequential element (OUT_reg[1]) is unused and will be removed from module ConstrainedRandom.
+WARNING: [Synth 8-3332] Sequential element (OUT_reg[0]) is unused and will be removed from module ConstrainedRandom.
+WARNING: [Synth 8-3332] Sequential element (OUT_reg[2]) is unused and will be removed from module ConstrainedRandom__parameterized0.
+WARNING: [Synth 8-3332] Sequential element (OUT_reg[1]) is unused and will be removed from module ConstrainedRandom__parameterized0.
+WARNING: [Synth 8-3332] Sequential element (OUT_reg[0]) is unused and will be removed from module ConstrainedRandom__parameterized0.
+WARNING: [Synth 8-3332] Sequential element (OUT_reg[2]) is unused and will be removed from module ConstrainedRandom__parameterized1.
+WARNING: [Synth 8-3332] Sequential element (OUT_reg[1]) is unused and will be removed from module ConstrainedRandom__parameterized1.
+WARNING: [Synth 8-3332] Sequential element (OUT_reg[0]) is unused and will be removed from module ConstrainedRandom__parameterized1.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[63]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[62]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[61]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[60]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[59]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[58]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[57]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[56]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[55]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[54]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[53]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[52]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[51]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[50]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[49]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[48]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[47]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[46]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[45]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[44]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[43]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[42]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[41]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[40]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[39]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[38]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[37]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[36]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[35]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[34]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[33]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[32]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[31]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[30]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[29]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[28]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[27]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[26]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[25]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[24]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[23]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[22]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[21]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[20]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[19]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[18]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[17]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[16]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[15]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[14]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[13]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[12]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[11]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[10]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[9]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_pc_copy_reg[8]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank1_csr_p_reg[0]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank1_csr_p_reg[1]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank1_csr_p_reg[2]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank1_csr_p_reg[3]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank2_csr_s_reg[5]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank2_csr_p_reg[1]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank2_csr_p_reg[2]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank2_csr_p_reg[3]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank3_csr_p_reg[1]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank3_csr_p_reg[2]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank3_csr_p_reg[3]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank3_csr_p_reg[4]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank4_csr_p_reg[1]) is unused and will be removed from module mkbranch.
+WARNING: [Synth 8-3332] Sequential element (rg_bank4_csr_p_reg[2]) is unused and will be removed from module mkbranch.
+---------------------------------------------------------------------------------
+Finished Area Optimization : Time (s): cpu = 00:00:16 ; elapsed = 00:00:17 . Memory (MB): peak = 1441.105 ; gain = 554.246 ; free physical = 12578 ; free virtual = 29395
+---------------------------------------------------------------------------------
+Finished Parallel Area Optimization  : Time (s): cpu = 00:00:16 ; elapsed = 00:00:17 . Memory (MB): peak = 1441.105 ; gain = 554.246 ; free physical = 12578 ; free virtual = 29395
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 1465.105 ; gain = 578.246 ; free physical = 12503 ; free virtual = 29327
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:23 ; elapsed = 00:00:25 . Memory (MB): peak = 1502.777 ; gain = 615.918 ; free physical = 12467 ; free virtual = 29291
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+INFO: [Synth 8-4480] The timing for the instance RAM_reg (implemented as a block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
+INFO: [Synth 8-4480] The timing for the instance RAM_reg (implemented as a block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
+INFO: [Synth 8-4480] The timing for the instance RAM_reg (implemented as a block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
+INFO: [Synth 8-4480] The timing for the instance RAM_reg (implemented as a block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
+INFO: [Synth 8-4480] The timing for the instance RAM_reg (implemented as a block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:24 ; elapsed = 00:00:25 . Memory (MB): peak = 1510.785 ; gain = 623.926 ; free physical = 12460 ; free virtual = 29284
+---------------------------------------------------------------------------------
+Finished Parallel Technology Mapping Optimization  : Time (s): cpu = 00:00:24 ; elapsed = 00:00:25 . Memory (MB): peak = 1510.785 ; gain = 623.926 ; free physical = 12460 ; free virtual = 29284
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+Finished Parallel Synthesis Optimization  : Time (s): cpu = 00:00:24 ; elapsed = 00:00:25 . Memory (MB): peak = 1510.785 ; gain = 623.926 ; free physical = 12460 ; free virtual = 29284
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:24 ; elapsed = 00:00:25 . Memory (MB): peak = 1510.785 ; gain = 623.926 ; free physical = 12460 ; free virtual = 29284
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:24 ; elapsed = 00:00:25 . Memory (MB): peak = 1510.785 ; gain = 623.926 ; free physical = 12460 ; free virtual = 29284
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:24 ; elapsed = 00:00:26 . Memory (MB): peak = 1510.785 ; gain = 623.926 ; free physical = 12460 ; free virtual = 29284
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+Static Shift Register Report:
++------------+---------------------------+--------+-------+--------------+--------------------+-------------------+--------+---------+
+|Module Name | RTL Name                  | Length | Width | Reset Signal | Pull out first Reg | Pull out last Reg | SRL16E | SRLC32E | 
++------------+---------------------------+--------+-------+--------------+--------------------+-------------------+--------+---------+
+|mkbranch    | rg_global_history_reg[79] | 40     | 1     | YES          | NO                 | YES               | 0      | 2       | 
+|mkbranch    | rg_global_history_reg[39] | 20     | 1     | YES          | NO                 | YES               | 0      | 1       | 
+|mkbranch    | rg_global_history_reg[19] | 10     | 1     | YES          | NO                 | YES               | 1      | 0       | 
++------------+---------------------------+--------+-------+--------------+--------------------+-------------------+--------+---------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-----------+------+
+|      |Cell       |Count |
++------+-----------+------+
+|1     |BUFG       |     1|
+|2     |CARRY4     |     4|
+|3     |LUT1       |    16|
+|4     |LUT2       |    39|
+|5     |LUT3       |    60|
+|6     |LUT4       |    48|
+|7     |LUT5       |    74|
+|8     |LUT6       |    99|
+|9     |RAMB18E1   |     4|
+|10    |RAMB18E1_1 |     1|
+|11    |SRL16E     |     1|
+|12    |SRLC32E    |     3|
+|13    |FDRE       |   165|
+|14    |IBUF       |    69|
+|15    |OBUF       |    27|
++------+-----------+------+
+
+Report Instance Areas: 
++------+---------------+--------------------------+------+
+|      |Instance       |Module                    |Cells |
++------+---------------+--------------------------+------+
+|1     |top            |                          |   611|
+|2     |  bram_bank1   |BRAM2Load                 |     1|
+|3     |  bram_bank2   |BRAM2Load__parameterized0 |     1|
+|4     |  bram_bank3   |BRAM2Load__parameterized1 |     1|
+|5     |  bram_bank4   |BRAM2Load__parameterized2 |     1|
+|6     |  bram_bimodal |BRAM2Load__parameterized3 |     1|
++------+---------------+--------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:24 ; elapsed = 00:00:26 . Memory (MB): peak = 1510.785 ; gain = 623.926 ; free physical = 12460 ; free virtual = 29284
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 125 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:19 ; elapsed = 00:00:19 . Memory (MB): peak = 1510.785 ; gain = 182.113 ; free physical = 12460 ; free virtual = 29284
+Synthesis Optimization Complete : Time (s): cpu = 00:00:24 ; elapsed = 00:00:26 . Memory (MB): peak = 1510.793 ; gain = 623.934 ; free physical = 12461 ; free virtual = 29285
+INFO: [Project 1-571] Translating synthesized netlist
+INFO: [Netlist 29-17] Analyzing 78 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 1 instances were transformed.
+  SRLC32E => SRL16E: 1 instances
+
+INFO: [Common 17-83] Releasing license: Synthesis
+68 Infos, 179 Warnings, 5 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:23 ; elapsed = 00:00:24 . Memory (MB): peak = 1510.793 ; gain = 537.426 ; free physical = 12462 ; free virtual = 29286
+report_utilization: Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.09 . Memory (MB): peak = 1542.801 ; gain = 0.000 ; free physical = 12461 ; free virtual = 29286
+INFO: [Common 17-206] Exiting Vivado at Sat Jun  9 10:13:34 2018...
+[Sat Jun  9 10:13:34 2018] core_synth_1 finished
+wait_on_run: Time (s): cpu = 00:00:00.14 ; elapsed = 00:00:32 . Memory (MB): peak = 1035.207 ; gain = 8.000 ; free physical = 13096 ; free virtual = 29920
+# open_run core_synth_1 -name core_synth_1
+Design is defaulting to impl run constrset: constrs_1
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 78 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.1
+INFO: [Device 21-403] Loading part xc7a100tcsg324-1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Parsing XDC File [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/src/tcl/constraints.xdc]
+INFO: [Vivado 12-2286] Implicit search of objects for pattern 'CLK' matched to 'port' objects. [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/src/tcl/constraints.xdc:1]
+Resolution: To avoid ambiguous patterns, provide proper objects using get commands e.g. [get_nets xyz].
+Finished Parsing XDC File [/home/ram/Bluespec_BSV_Tutorial/Example_Programs/Branch/src/tcl/constraints.xdc]
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+# report_utilization -hierarchical -file $core_project_dir/syn_area.txt
+report_utilization: Time (s): cpu = 00:00:00.06 ; elapsed = 00:00:00.08 . Memory (MB): peak = 1279.648 ; gain = 0.000 ; free physical = 12867 ; free virtual = 29693
+# report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose\
+#   -max_paths 10 -input_pins -file $core_project_dir/syn_timing.txt
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 4 CPUs
+report_timing_summary: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 1716.105 ; gain = 436.457 ; free physical = 12513 ; free virtual = 29353
+# exit 
+INFO: [Common 17-206] Exiting Vivado at Sat Jun  9 10:13:45 2018...
