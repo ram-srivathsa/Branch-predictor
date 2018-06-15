@@ -1,4 +1,4 @@
-package branch;
+package branch2;
 
 import BRAMCore :: *;
 import Randomizable :: *;
@@ -12,7 +12,7 @@ import Randomizable :: *;
 `define DATA_SIZE_GLOBAL 12
 `define TAG_SIZE 8
 `define HIST_SIZE 80 //no. of history bits
-`define PC_SIZE 64
+`define PC_SIZE 32
 `define BANK_BITS 3
 `define WRITE True
 `define READ False
@@ -36,6 +36,9 @@ typedef Bit#(`PC_SIZE) Gv_pc;
 typedef Bit#(TSub#(`TAG_SIZE,1)) Gv_secondary_csr;
 typedef Bit#(`BANK_BITS) Gv_bank_num;
 typedef Bit#(`COUNTER_SIZE) Gv_counter;
+typedef struct{Gv_pc pc;Bool truth;Bit#(1) prediction;Gv_counter counter;Gv_tag tag;Bit#(5) bank_bits;Gv_bank_num bank_num;Gv_counter bimodal;} Gv_train_predictor deriving(Bits);
+typedef struct{Bit#(1) prediction;Gv_counter counter;Gv_tag tag;Bit#(5) bank_bits;Gv_bank_num bank_num;Gv_counter bimodal_counter;} Gv_return_predictor deriving(Bits);
+
 
 
 //functions
@@ -61,9 +64,9 @@ interface Ifc_branch;
 	//enters pc into module,performs hash and initiates bram requests
 	method Action ma_put(Gv_pc pc);
 	//returns the prediction result
-	method Bit#(23) mn_get;
+	method Gv_return_predictor mn_get;
 	//to train the predictor
-	method Action ma_train(Gv_pc pc,Bool truth,Bit#(1) prediction,Gv_counter counter,Gv_tag tag,Bit#(5) bank_bits,Gv_bank_num bank_no,Gv_counter bimodal);
+	method Action ma_train(Gv_train_predictor training_data);
 	//to initialize the predictor banks at any time
 	method Action ma_flush;
 endinterface
@@ -83,12 +86,6 @@ module mkbranch(Ifc_branch);
 	Randomize#(Gv_bank_num) random_bank1 <- mkConstrainedRandomizer(2,4);
 	Randomize#(Gv_bank_num) random_bank2 <- mkConstrainedRandomizer(3,4);
 
-	//outputs of the banks
-	Wire#(Gv_bimodal_data) wr_bimodal_out <- mkWire();
-	Wire#(Gv_global_data) wr_bank1_out <- mkWire();
-	Wire#(Gv_global_data) wr_bank2_out <- mkWire();
-	Wire#(Gv_global_data) wr_bank3_out <- mkWire();
-	Wire#(Gv_global_data) wr_bank4_out <- mkWire();
 	//copy of incoming pc for update stages
 	Reg#(Gv_pc) rg_pc_copy <- mkReg(0);
 	//to control flushing operation
@@ -132,21 +129,27 @@ module mkbranch(Ifc_branch);
 	Wire#(Gv_counter) wr_bimodal_counter <- mkWire;
 
 
-	//rule to perform the complete prediction; computes hash outputs,performs comparisons and muxing(through if else tree)
+	//rule to read bram outputs and perform the complete prediction; computes hash outputs,performs comparisons and muxing(through if else tree)
 	//updates the counter value of matching bank as well as m,u bits of all banks and the bank no. of matching bank
 	rule rl_predict;
-		Bool lv_compare1=fn_compare(wr_bank1_out[8:1], fn_hash_tag(rg_pc_copy[7:0],rg_bank1_csr_p,rg_bank1_csr_s)); //compare tag output of bank 4 with hash function output at bank 4
-		Bool lv_compare2=fn_compare(wr_bank2_out[8:1], fn_hash_tag(rg_pc_copy[7:0],rg_bank2_csr_p,rg_bank2_csr_s)); //compare tag output of bank 3 with hash function output at bank 3
-		Bool lv_compare3=fn_compare(wr_bank3_out[8:1], fn_hash_tag(rg_pc_copy[7:0],rg_bank3_csr_p,rg_bank3_csr_s)); //compare tag output of bank 2 with hash function output at bank 2
-		Bool lv_compare4=fn_compare(wr_bank4_out[8:1], fn_hash_tag(rg_pc_copy[7:0],rg_bank4_csr_p,rg_bank4_csr_s)); //compare tag output of bank 1 with hash function output at bank 1
+		Gv_bimodal_data lv_bimodal_out= bram_bimodal.a.read();
+		Gv_global_data lv_bank1_out= bram_bank1.a.read();
+		Gv_global_data lv_bank2_out= bram_bank2.a.read();
+		Gv_global_data lv_bank3_out= bram_bank3.a.read();
+		Gv_global_data lv_bank4_out= bram_bank4.a.read();
 		
-		wr_bank_bits<= {wr_bimodal_out[0],wr_bank1_out[0],wr_bank2_out[0],wr_bank3_out[0],wr_bank4_out[0]};
-		wr_bimodal_counter<= wr_bimodal_out[3:1];
+		Bool lv_compare1=fn_compare(lv_bank1_out[8:1], fn_hash_tag(rg_pc_copy[7:0],rg_bank1_csr_p,rg_bank1_csr_s)); //compare tag output of bank 4 with hash function output at bank 4
+		Bool lv_compare2=fn_compare(lv_bank2_out[8:1], fn_hash_tag(rg_pc_copy[7:0],rg_bank2_csr_p,rg_bank2_csr_s)); //compare tag output of bank 3 with hash function output at bank 3
+		Bool lv_compare3=fn_compare(lv_bank3_out[8:1], fn_hash_tag(rg_pc_copy[7:0],rg_bank3_csr_p,rg_bank3_csr_s)); //compare tag output of bank 2 with hash function output at bank 2
+		Bool lv_compare4=fn_compare(lv_bank4_out[8:1], fn_hash_tag(rg_pc_copy[7:0],rg_bank4_csr_p,rg_bank4_csr_s)); //compare tag output of bank 1 with hash function output at bank 1
+		
+		wr_bank_bits<= {lv_bimodal_out[0],lv_bank1_out[0],lv_bank2_out[0],lv_bank3_out[0],lv_bank4_out[0]};
+		wr_bimodal_counter<= lv_bimodal_out[3:1];
 		if (lv_compare4)   
 		begin             
-			wr_prediction<= wr_bank4_out[11];     //for type conversion from Bit#(1) to Bool	
-			wr_counter<= wr_bank4_out[11:9];
-			wr_tag<= wr_bank4_out[8:1];
+			wr_prediction<= lv_bank4_out[11];     //for type conversion from Bit#(1) to Bool	
+			wr_counter<= lv_bank4_out[11:9];
+			wr_tag<= lv_bank4_out[8:1];
 			wr_bank_num<= 3'b100;
 		end
 
@@ -154,9 +157,9 @@ module mkbranch(Ifc_branch);
 		begin
 			if(lv_compare3) 
 			begin
-				wr_prediction<= wr_bank3_out[11];			
-				wr_counter<= wr_bank3_out[11:9];
-				wr_tag<= wr_bank3_out[8:1];
+				wr_prediction<= lv_bank3_out[11];			
+				wr_counter<= lv_bank3_out[11:9];
+				wr_tag<= lv_bank3_out[8:1];
 				wr_bank_num<= 3'b011;
 			end
 
@@ -164,9 +167,9 @@ module mkbranch(Ifc_branch);
 			begin
 				if(lv_compare2) 
 				begin
-					wr_prediction<= wr_bank2_out[11]; 		
-					wr_counter<= wr_bank2_out[11:9];
-					wr_tag<= wr_bank2_out[8:1];
+					wr_prediction<= lv_bank2_out[11]; 		
+					wr_counter<= lv_bank2_out[11:9];
+					wr_tag<= lv_bank2_out[8:1];
 					wr_bank_num<= 3'b010;
 				end
 
@@ -174,16 +177,16 @@ module mkbranch(Ifc_branch);
 				begin
 					if(lv_compare1) 
 					begin
-						wr_prediction<= wr_bank1_out[11];	
-						wr_counter<= wr_bank1_out[11:9];
-						wr_tag<= wr_bank1_out[8:1];
+						wr_prediction<= lv_bank1_out[11];	
+						wr_counter<= lv_bank1_out[11:9];
+						wr_tag<= lv_bank1_out[8:1];
 						wr_bank_num<= 3'b001;
 					end
 	
 					else                                                                                          //none of the tags match
 					begin						
-						wr_prediction<= wr_bimodal_out[3];	
-						wr_counter<= wr_bimodal_out[3:1];
+						wr_prediction<= lv_bimodal_out[3];	
+						wr_counter<= lv_bimodal_out[3:1];
 						wr_tag<= ?;
 						wr_bank_num<= 3'b000;
 					end                                                     
@@ -191,16 +194,6 @@ module mkbranch(Ifc_branch);
 			end
 		end
 		
-	endrule
-
-
-	//reads bram outputs onto the wires; separate rule used instead of putting it in ma_put to prevent scheduling issues if any
-	rule rl_read_bram;
-		wr_bimodal_out<= bram_bimodal.a.read();
-		wr_bank1_out<= bram_bank1.a.read();
-		wr_bank2_out<= bram_bank2.a.read();
-		wr_bank3_out<= bram_bank3.a.read();
-		wr_bank4_out<= bram_bank4.a.read();
 	endrule
 
 
@@ -282,8 +275,15 @@ module mkbranch(Ifc_branch);
 	endmethod
 
 	//returns prediction along with training data
-	method Bit#(23) mn_get;
-		return {wr_prediction,wr_counter,wr_tag,wr_bank_bits,wr_bank_num,wr_bimodal_counter};
+	method Gv_return_predictor mn_get;
+		Gv_return_predictor return_vals;
+		return_vals.prediction= wr_prediction;
+		return_vals.counter= wr_counter;
+		return_vals.tag= wr_tag;
+		return_vals.bank_bits= wr_bank_bits;
+		return_vals.bank_num= wr_bank_num;
+		return_vals.bimodal_counter= wr_bimodal_counter;
+		return return_vals;
 	endmethod
 
 	//to start flush operation
@@ -296,27 +296,27 @@ module mkbranch(Ifc_branch);
 
 	//gets training data into predictor and does the training; also updates the csrs
 
-	method Action ma_train(Gv_pc pc,Bool truth,Bit#(1) prediction,Gv_counter counter,Gv_tag tag,Bit#(5) bank_bits,Gv_bank_num bank_num,Gv_counter bimodal) if(!rg_flush);
-		Gv_bimodal_addr lv_bimodal_addr=pc[11:0];
-		Gv_global_addr lv_bank1_addr=fn_hash_indx(pc[19:0],rg_global_history[9:0]);
-		Gv_global_addr lv_bank2_addr=fn_hash_indx(pc[19:0],rg_bank2_csr_indx);
-		Gv_global_addr lv_bank3_addr=fn_hash_indx(pc[19:0],rg_bank3_csr_indx);
-		Gv_global_addr lv_bank4_addr=fn_hash_indx(pc[19:0],rg_bank4_csr_indx);
+	method Action ma_train(Gv_train_predictor training_data) if(!rg_flush);
+		Gv_bimodal_addr lv_bimodal_addr=training_data.pc[11:0];
+		Gv_global_addr lv_bank1_addr=fn_hash_indx(training_data.pc[19:0],rg_global_history[9:0]);
+		Gv_global_addr lv_bank2_addr=fn_hash_indx(training_data.pc[19:0],rg_bank2_csr_indx);
+		Gv_global_addr lv_bank3_addr=fn_hash_indx(training_data.pc[19:0],rg_bank3_csr_indx);
+		Gv_global_addr lv_bank4_addr=fn_hash_indx(training_data.pc[19:0],rg_bank4_csr_indx);
 		
-		Gv_tag lv_new_tag1=fn_hash_tag(pc[7:0],rg_bank1_csr_p,rg_bank1_csr_s);
-		Gv_tag lv_new_tag2=fn_hash_tag(pc[7:0],rg_bank2_csr_p,rg_bank2_csr_s);
-		Gv_tag lv_new_tag3=fn_hash_tag(pc[7:0],rg_bank3_csr_p,rg_bank3_csr_s);
-		Gv_tag lv_new_tag4=fn_hash_tag(pc[7:0],rg_bank4_csr_p,rg_bank4_csr_s);
+		Gv_tag lv_new_tag1=fn_hash_tag(training_data.pc[7:0],rg_bank1_csr_p,rg_bank1_csr_s);
+		Gv_tag lv_new_tag2=fn_hash_tag(training_data.pc[7:0],rg_bank2_csr_p,rg_bank2_csr_s);
+		Gv_tag lv_new_tag3=fn_hash_tag(training_data.pc[7:0],rg_bank3_csr_p,rg_bank3_csr_s);
+		Gv_tag lv_new_tag4=fn_hash_tag(training_data.pc[7:0],rg_bank4_csr_p,rg_bank4_csr_s);
 
 		//local variables
-		Gv_pc lv_pc= pc;
-		Bit#(1) lv_prediction= prediction;
-		Gv_bank_num lv_bank_num= bank_num;
-		Bool lv_truth= truth;
-		Gv_counter lv_counter= counter;
-		Bit#(5) lv_bank_bits= bank_bits; 
-		Gv_tag lv_tag= tag;
-		Gv_counter lv_training_bimodal_out= bimodal;
+		Gv_pc lv_pc= training_data.pc;
+		Bit#(1) lv_prediction= training_data.prediction;
+		Gv_bank_num lv_bank_num= training_data.bank_num;
+		Bool lv_truth= training_data.truth;
+		Gv_counter lv_counter= training_data.counter;
+		Bit#(5) lv_bank_bits= training_data.bank_bits; 
+		Gv_tag lv_tag= training_data.tag;
+		Gv_counter lv_training_bimodal_out= training_data.bimodal;
 
 		//get random bank number for stealing
 		Gv_bank_num lv_rand_bank0_num <- random_bank0.next();
